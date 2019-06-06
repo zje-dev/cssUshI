@@ -21,6 +21,7 @@ class inicio:
 	def __init__ (self, name, master, tk, base):
 		self.root = master
 		self.root.title(name)
+		self.root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file='src/img/logo.png'))
 		self.root.configure(background="#a8a8a8")
 		i = 0
 		W = self.root.winfo_screenwidth()
