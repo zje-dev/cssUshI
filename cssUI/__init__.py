@@ -8,6 +8,8 @@ from json import *
 from webbrowser import *
 from PIL import *
 from src.lib.formaHtml import formaHTML
+sys.path.append(".dev")
+from devC import dev_mode
 class inicio:
 	root = None
 	tmp = []
@@ -115,6 +117,10 @@ class inicio:
 						isHow.destroy()
 					Button(isHow,text="HTML", command=isHTML).pack(fill=X)
 					Button(isHow,text="proyecto", command=isCUI).pack(fill=X)
-root = Tk()
-app = inicio("cssUshI", root, ImageTk, Tk)
-root.mainloop()
+if len(sys.argv) > 1:
+	if sys.argv[1] == "-dev_console":
+		dev_mode()
+else:
+	root = Tk()
+	app = inicio("cssUshI", root, ImageTk, Tk)
+	root.mainloop()

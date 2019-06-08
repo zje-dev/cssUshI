@@ -27,6 +27,7 @@ def formaHTML (canvas, isL, h, w):
 		canvas.configure(background = fsty["background-color"])
 	def HP (body):
 		textTag = ["b","span","a","p","strong","i","em","mark","small","del","ins","sub","sup", "h1", "h2", "h3", "h4", "h5", "h6"]
+		objeTag = ["div","header","footer","form","center"]
 		xp = 0
 		for el in body:
 			global defaTextColor
@@ -130,6 +131,23 @@ def formaHTML (canvas, isL, h, w):
 				else:
 					fs = int(w / 99) * len(el.text)
 					xp += fs
+			if el.tag in objeTag:
+				up = 0
+				ex = 0
+				exe = 0
+				ey = 0
+				eye = 0
+				HP(el)
+				def PHP (bo, X, Y):
+					for e in bo:
+				PHP(bo)
+				try:
+					sss = el.attrib["style"]
+					scss = cssForma (sss)
+					c = canvas.create_rectangle(ex,ey,xp + exe,h / 34 * jumpline + up + eye, fill = scss["background-color"], outline="")
+				except:
+					c = canvas.create_rectangle(ex,ey,xp + 1,h / 34 * jumpline + up, outline="")
+				canvas.tag_lower(c)
 			if el.tag == "br":
 				jumpline += 1
 				xp = 0
