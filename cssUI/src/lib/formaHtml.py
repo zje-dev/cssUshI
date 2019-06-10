@@ -21,18 +21,19 @@ def formaHTML (canvas, isL, h, w):
 	tree = etree.parse(StringIO(f), parser).getroot()
 	bod = tree[1]
 	head = tree[0]
-	sty = bod.attrib["style"]
-	fsty = cssForma(sty)
-	if fsty["background-color"] != " ":
-		canvas.configure(background = fsty["background-color"])
+	try:
+		sty = bod.attrib["style"]
+		fsty = cssForma(sty)
+		if fsty["background-color"] != " ":
+			canvas.configure(background = fsty["background-color"])
+	except:
+		pass
 	def HP (body):
 		textTag = ["b","span","a","p","strong","i","em","mark","small","del","ins","sub","sup", "h1", "h2", "h3", "h4", "h5", "h6"]
 		objeTag = ["div","header","footer","form","center"]
 		xp = 0
 		for el in body:
-			global defaTextColor
 			global jumpline
-			defaTextColor = fsty["color"]
 			if el.tag in textTag:
 				try:
 					estilo = el.attrib["style"]
@@ -138,9 +139,23 @@ def formaHTML (canvas, isL, h, w):
 				ey = 0
 				eye = 0
 				HP(el)
-				def PHP (bo, X, Y):
+				def largest(arr):
+					max = ""
+					for i in range(len(arr)):
+						if arr[i] != None:
+							if len(arr[i]) > len(max):
+								max = arr[i]
+					return max
+				def PHP (bo):
+					arr = []
 					for e in bo:
-				PHP(bo)
+						try:
+							if not etree.tostring(e).decode() in e.text:
+								arr.append(e.text)
+						except:
+							continue
+					return largest(arr)
+				exe = len(PHP(el)) * w / 126
 				try:
 					sss = el.attrib["style"]
 					scss = cssForma (sss)
