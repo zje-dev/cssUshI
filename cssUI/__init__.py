@@ -91,27 +91,11 @@ class inicio:
 						cav = Canvas(foor, background="white", width = W / 1.5, height = H / 1.5)
 						cav.grid(row=0,column=1,sticky="we")
 						isHow.destroy()
-						def zoomIn ():
-							cav.config(width = cav.winfo_width() + 25, height = cav.winfo_height() + 35)
-							cav.delete("all")
-							formaHTML(cav, data, cav.winfo_height(), cav.winfo_width())
-						def zoomOu ():
-							cav.config(width = cav.winfo_width() - 25, height = cav.winfo_height() - 35)
-							cav.delete("all")
-							formaHTML(cav, data, cav.winfo_height(), cav.winfo_width())
 						i = 0
-						for i in range(5):
+						for i in range(3):
 							coma = None
-							if i == 3:
-								coma = zoomIn
-							if i == 4:
-								coma = zoomOu
-							b = Button(foor, command=coma)
+							b = Button(foor)
 							b.grid(row=1,column=i)
-							if i == 3:
-								b.configure(text="+")
-							if i == 4:
-								b.configure(text="-")
 						formaHTML(cav, data, H / 1.5, W / 1.5)
 					def isCUI ():
 						isHow.destroy()
