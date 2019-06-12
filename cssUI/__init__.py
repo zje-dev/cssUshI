@@ -88,7 +88,7 @@ class inicio:
 					Label(isHow,text="que tipo de archivo representa?").pack()
 					def isHTML ():
 						self.root.attributes('-zoomed', True)
-						cav = Canvas(foor, background="white", width = W / 1.5, height = H / 1.5)
+						cav = Canvas(foor, background="white", width = W / 1.3, height = H / 1.3)
 						cav.grid(row=0,column=1,sticky="we")
 						isHow.destroy()
 						i = 0
