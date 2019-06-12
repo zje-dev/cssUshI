@@ -96,7 +96,7 @@ class inicio:
 							coma = None
 							b = Button(foor)
 							b.grid(row=1,column=i)
-						formaHTML(cav, data, H / 1.5, W / 1.5)
+						formaHTML(cav, data, int(H / 1.5), int(W / 1.5))
 					def isCUI ():
 						isHow.destroy()
 					Button(isHow,text="HTML", command=isHTML).pack(fill=X)
