@@ -97,6 +97,12 @@ class inicio:
 							b = Button(foor)
 							b.grid(row=1,column=i)
 						formaHTML(cav, data, int(H / 1.5), int(W / 1.5))
+						Xm =  Scrollbar(foor, orient="horizontal", command=cav.xview)
+						Xm.grid(row=1,column=1,sticky="ew")
+						Ym =  Scrollbar(foor, orient="vertical", command=cav.yview)
+						Ym.grid(row=0,column=2,sticky="ns")
+						cav.configure(yscrollcommand=Ym.set, xscrollcommand=Xm.set)
+						cav.configure(scrollregion=(0,0,0,1000))
 					def isCUI ():
 						isHow.destroy()
 					Button(isHow,text="HTML", command=isHTML).pack(fill=X)
