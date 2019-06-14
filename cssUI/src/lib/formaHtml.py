@@ -58,7 +58,10 @@ class text:
 		if len(self.CSS) > 0:
 			self.color = self.CSS["color"]
 		self.element = c.create_text(x + self.padding, y + self.padding, text=parent.text, anchor=NW, fill=self.color, font=("Arial", self.fonZise, self.texType))
-		
+		if parent.tag == "sup":
+			c.coords(self.element, x + self.padding, y + self.padding + 10)
+		elif parent.tag == "sub":
+			pass
 class div:
 	element = None
 	CSS = {}
