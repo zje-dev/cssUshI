@@ -71,40 +71,44 @@ class div:
 	cy = 0
 	texts = []
 	def __init__(self, c, s, x, y, parent, w, h, t):
-		self.element = c.create_rectangle(x,y,0,0, outline="")
-		self.CSS = cssRead(s)
-		if self.CSS != "ð":
-			for elemit in parent:
-				if elemit.tag in textag:
-					self.texts.append(text(elemit,x,y,c,w,h,t, t))
-				elif elemit.tag == "br":
-					self.texts.append("←")
-			if self.CSS != " ":
-				c.itemconfigure(self.element, fill=self.CSS["background-color"])
-			else:
-				c.itemconfigure(self.element, fill="white")
-			self.pad = sizeFormat(self.CSS["padding"], w)
-			TLT = []
-			for elem in self.texts:
-				if elem != "←":
-					c.coords(elem.element,self.cx, self.cy)
-					self.cx += (w / (91 - elem.fonZise)) * len(elem.text)
-					TLT.append(self.cx)
+		try:
+			self.element = c.create_rectangle(x,y,0,0, outline="")
+			self.CSS = cssRead(s)
+			if self.CSS != "ð":
+				for elemit in parent:
+					if elemit.tag in textag:
+						self.texts.append(text(elemit,x,y,c,w,h,t, t))
+					elif elemit.tag == "br":
+						self.texts.append("←")
+				if self.CSS != " ":
+					c.itemconfigure(self.element, fill=self.CSS["background-color"])
 				else:
-					self.cy += (h / 19)
-					try:
-						te = self.texts[self.texts.index(elem) + 1].element
-						self.cx = 0
-					except:
-						pass
-			self.cx = max(TLT)
-			c.coords(self.element, x, y, self.cx + self.pad, self.cy + self.pad + (h / (10 + self.texts[0].fonZise)))
+					c.itemconfigure(self.element, fill="white")
+				self.pad = sizeFormat(self.CSS["padding"], w)
+				TLT = []
+				for elem in self.texts:
+					if elem != "←":
+						c.coords(elem.element,self.cx, self.cy)
+						self.cx += (w / (91 - elem.fonZise)) * len(elem.text)
+						TLT.append(self.cx)
+					else:
+						self.cy += (h / 19)
+						try:
+							te = self.texts[self.texts.index(elem) + 1].element
+							self.cx = 0
+						except:
+							pass
+				self.cx = max(TLT)
+				c.coords(self.element, x, y, self.cx + self.pad, self.cy + self.pad + (h / (10 + self.texts[0].fonZise)))
+		except:
+			pass
 def cssRead (style):
-	if style != "ł":
+	if style != "ł" or style!="" or style!=None:
 		css = {"color":"black","background-color":" ","padding":"1px","font-size":"14px"}
-		tcss = style.split(";")
-		for cs in tcss:
-			css[cs.split(":")[0]] = cs.split(":")[1]
+		if style != None:
+			tcss = style.split(";")
+			for cs in tcss:
+				css[cs.split(":")[0]] = cs.split(":")[1]
 	else:
 		css = "ð"
 	return css
@@ -120,9 +124,15 @@ def formaHTML (canvas, isL, h, w):
 			if element.tag == "div" or element.tag == "center":
 				if "style" in element.attrib:
 					if element.tag == "div":
-						ele = div(canvas, element.get("style"), xp, yp, element, w, h, NW)
+						if "style" in element.attrib:
+							ele = div(canvas, element.get("style"), xp, yp, element, w, h, NW)
+						else:
+							ele = div(canvas, "", xp, yp, element, w, h, NW)
 					else:
-						ele = div(canvas, element.get("style"), xp, yp, element, w, h, N)
+						if "style" in element.attrib:
+							ele = div(canvas, element.get("style"), w / 2, yp, element, w, h, NW)
+						else:
+							ele = div(canvas, "", w / 2, yp, element, w, h, N)
 					yp += h / 19
 					xp = 0
 				else:
@@ -144,8 +154,3 @@ def formaHTML (canvas, isL, h, w):
 		canvas.configure(bg = cssRead(tree[1].get("style"))["background-color"])
 	canvas.delete("all")
 	format(tree[1], xp, yp)
-"""
-luego alargas las
-plumas/caparazon/piel para que se adapte a tu cuerpo. lo pintas con colores pastel o chillantes. listo ya tienes un fur-suit que no da pena y es
-como les gusta
-"""
