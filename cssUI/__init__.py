@@ -3,6 +3,7 @@ import tkinter
 import json
 import os, sys
 from tkinter import filedialog
+from tkinter.colorchooser import *
 from PIL import Image, ImageTk
 from json import *
 from webbrowser import *
@@ -11,16 +12,24 @@ from src.lib.formaHtml import formaHTML
 sys.path.append(".dev")
 #from devC import dev_mode
 class editCanva:
+	sele = False
+	seleTex = None
+	def colorPick (self):
+		pc = askcolor()
+	def selecciona (self):
+		self.sele = not self.sele
+		if self.sele == True:
+			pass
 	def __init__ (self,c, w, h):
 		par = Tk()
 		par.title("editar")
 		par.geometry("+"+str(w)+"+10")
-		Button(par,text="←",cursor="target").grid(row=0,column=0)
+		Button(par,text="←",cursor="target", command=self.selecciona).grid(row=0,column=0)
 		canv = Canvas(par, width = w / 6, height = h / 6, background="white")
 		canv.grid(row=1,column=0)
-		Label(par,text="nada seleccionado").grid(row=2,column=0)
-		Button(par,text="color de texto").grid(row=3,column=0)
-		Button(par,text="color de fondo").grid(row=4,column=0)
+		self.seleTex = Label(par,text="nada seleccionado").grid(row=2,column=0)
+		Button(par,text="color de texto", command=self.colorPick).grid(row=3,column=0)
+		Button(par,text="color de fondo", command=self.colorPick).grid(row=4,column=0)
 		par.mainloop()
 class inicio:
 	editor = None
