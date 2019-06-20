@@ -3,6 +3,8 @@ from tkinter import *
 import os
 from lxml import etree
 from io import StringIO, BytesIO
+from tkinter import filedialog
+from tkinter.colorchooser import *
 xp = 0
 yp = 0
 textag = ["span","b","i","sub","sup","h1","h2","h3","h4","h5","h6"]
@@ -71,6 +73,8 @@ class div:
 	cy = 0
 	texts = []
 	def __init__(self, c, s, x, y, parent, w, h, t):
+		cx = 0
+		cy = 0
 		try:
 			self.element = c.create_rectangle(x,y,0,0, outline="")
 			self.CSS = cssRead(s)
@@ -113,7 +117,10 @@ def cssRead (style):
 		css = "ð"
 	return css
 def formaHTML (canvas, isL, h, w):
+	canvas.delete("all")
 	global xp, yp
+	xp = 0
+	yp = 0
 	canvas.grid(row=0,column=1,sticky="we")
 	isL  += " "
 	f = os.popen("cd "+isL[0:isL.rfind("/")+1]+"; cat "+isL[isL.rfind("/")+1:-1]).read()
@@ -154,3 +161,11 @@ def formaHTML (canvas, isL, h, w):
 		canvas.configure(bg = cssRead(tree[1].get("style"))["background-color"])
 	canvas.delete("all")
 	format(tree[1], xp, yp)
+def cssWrite(style):
+	c = ""
+	if not style == "":
+		for sub in list(style):
+			if style[sub] == " ":
+				del style[sub]
+		c = str(style).replace("{","").replace("}","").replace(",",";").replace('\'',"").replace("\"","")
+	return c

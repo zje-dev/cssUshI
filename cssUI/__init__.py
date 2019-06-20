@@ -1,7 +1,10 @@
 from tkinter import *
 import tkinter
+from tkinter import ttk
 import json
 import os, sys
+from lxml import etree
+from io import StringIO, BytesIO
 from tkinter import filedialog
 from tkinter.colorchooser import *
 from PIL import Image, ImageTk
@@ -9,28 +12,52 @@ from json import *
 from webbrowser import *
 from PIL import *
 from src.lib.formaHtml import formaHTML
+from src.lib.formaHtml import cssRead
+from src.lib.formaHtml import cssWrite
 sys.path.append(".dev")
 #from devC import dev_mode
 class editCanva:
-	sele = False
-	seleTex = None
-	def colorPick (self):
-		pc = askcolor()
-	def selecciona (self):
-		self.sele = not self.sele
-		if self.sele == True:
-			pass
-	def __init__ (self,c, w, h):
+	def __init__ (self,c, w, h, xml):
 		par = Tk()
+		textColor = "black"
+		backColor = ""
 		par.title("editar")
 		par.geometry("+"+str(w)+"+10")
-		Button(par,text="←",cursor="target", command=self.selecciona).grid(row=0,column=0)
 		canv = Canvas(par, width = w / 6, height = h / 6, background="white")
 		canv.grid(row=1,column=0)
-		self.seleTex = Label(par,text="nada seleccionado").grid(row=2,column=0)
-		Button(par,text="color de texto", command=self.colorPick).grid(row=3,column=0)
-		Button(par,text="color de fondo", command=self.colorPick).grid(row=4,column=0)
-		par.mainloop()
+		def colorPick ():
+			global textColor
+			textColor = askcolor()
+		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
+		#Button(par,text="color de fondo", command=self.colorPickBG).grid(row=4,column=0)
+		def checkD ():
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			if len(ip) > 0:
+				global textColor
+				sass = cssRead(ip)
+				sass["color"] = textColor[1]
+				print(cssWrite(sass))
+			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
+		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
+		tre = Frame(par, background="black")
+		tre.grid(row=6,column=0)
+		xmlTree = ttk.Treeview(tre)
+		xmlTree.grid(row=0,column=0)
+		hd = xmlTree.insert("", END, text="HTML")
+		f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
+		parser = etree.HTMLParser()
+		tree = etree.parse(StringIO(f), parser).getroot()
+		for ele in tree[1]:
+			if "style" in ele.attrib:
+				ei = xmlTree.insert(hd, END, text=ele.tag, values=(ele.get("style")))
+			else:
+				ei = xmlTree.insert(hd, END, text=ele.tag)
+			if ele.tag == "div":
+				for subele in ele:
+					if "style" in subele.attrib:
+						ei = xmlTree.insert(hd, END, text=subele.tag, values=(subele.get("style")))
+					else:
+						ei = xmlTree.insert(hd, END, text=subele.tag)
 class inicio:
 	editor = None
 	root = None
@@ -51,7 +78,7 @@ class inicio:
 		i = 0
 		W = self.root.winfo_screenwidth()
 		H = self.root.winfo_screenheight()
-		for _ in range(6):
+		for _ in range(5):
 			self.tmp.append(Button(self.root))
 			filex = "src/img/i"+str(i)+".png"
 			self.images.append(tk.PhotoImage(Image.open(filex)))
@@ -83,9 +110,6 @@ class inicio:
 					editar(0)
 				Button(self.newRoot, command=openDir, text="selecciona una carpeta").pack()
 				Button(self.newRoot, command=crea, text="crear").pack()
-		def edi ():
-			if self.editor == None or self.cav == None:
-				self.editor = editCanva(self.cav, W, H)			
 		def organizar (arr, i):
 			for e in arr:
 				filex = "src/img/i"+str(i)+".png"
@@ -95,8 +119,6 @@ class inicio:
 					e.configure(command=newF)
 				elif i == 4:
 					e.configure(command=Open)
-				elif i == 5:
-					e.configure(command=edi)
 				i += 1
 		organizar(self.tmp, i)
 		def editar (data):
@@ -124,18 +146,8 @@ class inicio:
 							coma = None
 							b = Button(foor)
 							b.grid(row=1,column=i)
+						ed = editCanva(self.cav, W, H, data)
 						formaHTML(self.cav, data, int(H / 1.5), int(W / 1.5))
-						if self.editor == None or self.cav == None:
-							self.editor = editCanva(self.cav, W, H)
-						try:
-							Xm = Scrollbar(foor, orient="horizontal", command=self.cav.xview)
-							Xm.grid(row=1,column=1,sticky="ew")
-							Ym = Scrollbar(foor, orient="vertical", command=self.cav.yview)
-							Ym.grid(row=0,column=2,sticky="ns")
-							self.cav.configure(yscrollcommand=Ym.set, xscrollcommand=Xm.set)
-							self.cav.configure(scrollregion=(0,0,0,1000))
-						except:
-							pass
 					def isCUI ():
 						isHow.destroy()
 					Button(isHow,text="HTML", command=isHTML).pack(fill=X)
