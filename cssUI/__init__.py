@@ -14,8 +14,6 @@ from PIL import *
 from src.lib.formaHtml import formaHTML
 from src.lib.formaHtml import cssRead
 from src.lib.formaHtml import cssWrite
-sys.path.append(".dev")
-#from devC import dev_mode
 class editCanva:
 	def __init__ (self,c, w, h, xml):
 		par = Tk()
@@ -23,39 +21,43 @@ class editCanva:
 		backColor = ""
 		par.title("editar")
 		par.geometry("+"+str(w)+"+10")
-		canv = Canvas(par, width = w / 6, height = h / 6, background="white")
-		canv.grid(row=1,column=0)
 		def colorPick ():
 			global textColor
 			textColor = askcolor()
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		#Button(par,text="color de fondo", command=self.colorPickBG).grid(row=4,column=0)
+		f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
+		parser = etree.HTMLParser()
+		tree = etree.parse(StringIO(f), parser).getroot()
 		def checkD ():
-			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
-			if len(ip) > 0:
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
+			scri = etree.fromstring(ip)
+			if "style" in scri.attrib:
+				ip = scri.get("style")
+			else:
+				ip = ""
+			if len(ip) > 1:
 				global textColor
 				sass = cssRead(ip)
 				sass["color"] = textColor[1]
-				print(cssWrite(sass))
-			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
+				formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		tre = Frame(par, background="black")
 		tre.grid(row=6,column=0)
 		xmlTree = ttk.Treeview(tre)
 		xmlTree.grid(row=0,column=0)
 		hd = xmlTree.insert("", END, text="HTML")
-		f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
-		parser = etree.HTMLParser()
-		tree = etree.parse(StringIO(f), parser).getroot()
 		for ele in tree[1]:
+			rl = etree.tostring(ele).decode()
 			if "style" in ele.attrib:
-				ei = xmlTree.insert(hd, END, text=ele.tag, values=(ele.get("style")))
+				ei = xmlTree.insert(hd, END, text=ele.tag, values=(rl))
 			else:
 				ei = xmlTree.insert(hd, END, text=ele.tag)
 			if ele.tag == "div":
 				for subele in ele:
+					rl = etree.tostring(subele).decode()
 					if "style" in subele.attrib:
-						ei = xmlTree.insert(hd, END, text=subele.tag, values=(subele.get("style")))
+						ei = xmlTree.insert(hd, END, text=subele.tag, values=(rl))
 					else:
 						ei = xmlTree.insert(hd, END, text=subele.tag)
 class inicio:
@@ -152,11 +154,6 @@ class inicio:
 						isHow.destroy()
 					Button(isHow,text="HTML", command=isHTML).pack(fill=X)
 					Button(isHow,text="proyecto", command=isCUI).pack(fill=X)
-if len(sys.argv) > 1:
-	pass
-#	if sys.argv[1] == "-dev_console":
-#		dev_mode()
-else:
-	root = Tk()
-	app = inicio("cssUshI", root, ImageTk, Tk)
-	root.mainloop()
+root = Tk()
+app = inicio("cssUshI", root, ImageTk, Tk)
+root.mainloop()
