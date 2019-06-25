@@ -43,8 +43,8 @@ class editCanva:
 			ts = etree.tostring(scri)
 			scri.set("style",cssWrite(sass))
 			os.chdir(xml[0:xml.rfind("/")+1])
-			command = "sed -i 's/"+str(ts).replace("'","")+"/"+str(etree.tostring(scri)).replace("'","")+"/g' "+str(xml[xml.rfind("/")+1:-1]).replace("'","")+ " "
-			print(command)
+			tg = xml + " "
+			command = "sed -i \'s|"+str(ts)[2:str(ts).find(">")]+"|"+str(etree.tostring(scri))[2:str(etree.tostring(scri)).find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
 			os.system(command)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		def fresh ():
@@ -171,3 +171,8 @@ class inicio:
 root = Tk()
 app = inicio("cssUshI", root, ImageTk, Tk)
 root.mainloop()
+"""
+TODO
+	-hacer una lista con cada elemento del HTML para usar el index para cambiar el texto
+	-mejorar el sistema HTML render
+"""
