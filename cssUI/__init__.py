@@ -36,12 +36,26 @@ class editCanva:
 				ip = scri.get("style")
 			else:
 				ip = ""
-			if len(ip) > 1:
-				global textColor
-				sass = cssRead(ip)
-				sass["color"] = textColor[1]
-				formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
+			global textColor
+			sass = cssRead(ip)
+			sass["color"] = textColor[1]
+			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
+			ts = etree.tostring(scri)
+			scri.set("style",cssWrite(sass))
+			os.chdir(xml[0:xml.rfind("/")+1])
+			command = "sed -i 's/"+str(ts).replace("'","")+"/"+str(etree.tostring(scri)).replace("'","")+"/g' "+str(xml[xml.rfind("/")+1:-1]).replace("'","")+ " "
+			print(command)
+			os.system(command)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
+		def fresh ():
+			for e in tree[1]:
+				if "style" in e.attrib:
+					print(e.get("style"))
+				if e.tag == "div":
+					for el in e:
+						if "style" in el.attrib:
+							print(e.get("style"))
+		Button(par,text="refrescar",command=fresh).grid(row=7,column=0)
 		tre = Frame(par, background="black")
 		tre.grid(row=6,column=0)
 		xmlTree = ttk.Treeview(tre)

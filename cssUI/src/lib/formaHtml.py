@@ -60,6 +60,7 @@ class text:
 			self.texType = "bold"
 		if len(self.CSS) > 0:
 			self.color = self.CSS["color"]
+		self.color.replace(" ","")
 		self.element = c.create_text(x + self.padding, y + self.padding, text=parent.text, anchor=self.align, fill=self.color, font=("Arial", self.fonZise, self.texType))
 		if parent.tag == "sup":
 			c.coords(self.element, x + self.padding, y + self.padding + 10)
