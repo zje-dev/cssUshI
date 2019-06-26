@@ -1,0 +1,9 @@
+deb pack's
+    -python3
+    -pip
+modules installed
+    -tkinter
+    -lxml
+    -io
+    -PIL
+    -playsound

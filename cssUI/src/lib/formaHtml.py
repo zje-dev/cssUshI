@@ -109,13 +109,17 @@ class div:
 			pass
 def cssRead (style):
 	if style != "ł" or style!="" or style!=None:
-		css = {"color":"black","background-color":" ","padding":"1px","font-size":"14px"}
+		css = {"color":" ","background-color":" ","padding":" ","font-size":" "}
 		if style != None:
 			tcss = style.split(";")
 			for cs in tcss:
 				css[cs.split(":")[0]] = cs.split(":")[1]
 	else:
 		css = "ð"
+	if css != "ð":
+		for sub in list(css):
+			if css[sub] == " ":
+				del css[sub]
 	return css
 def formaHTML (canvas, isL, h, w):
 	canvas.delete("all")
