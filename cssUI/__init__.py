@@ -41,10 +41,12 @@ class editCanva:
 			sass["color"] = textColor[1]
 			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
 			ts = etree.tostring(scri)
+			ts = str(ts)[2:str(ts).find(" ")]
 			scri.set("style",cssWrite(sass))
 			os.chdir(xml[0:xml.rfind("/")+1])
 			tg = xml + " "
-			command = "sed -i \'s|"+str(ts)[2:str(ts).find(">")]+"|"+str(etree.tostring(scri))[2:str(etree.tostring(scri)).find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+			command = "sed -i \'s|"+ts+"|"+str(etree.tostring(scri))[2:str(etree.tostring(scri)).find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+			print(command)
 			os.system(command)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		def fresh ():
