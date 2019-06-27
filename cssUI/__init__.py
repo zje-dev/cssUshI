@@ -39,31 +39,24 @@ try:
 					else:
 						ip = ""
 					global textColor
-					sass = cssRead(ip)
+					sass = {}
+					if len(ip) > 0:
+						sass = cssRead(ip)
 					sass["color"] = textColor[1]
 					ts = etree.tostring(scri)
-					ts = str(ts)[2:str(ts).find(" ")]
-					if "style" in scri.attrib:
-						scri.attrib["style"] = cssWrite(sass)
-					else:
-						scri.set("style",cssWrite(sass))
+					ts = str(ts)[2:str(ts).find(">")]
+					scri.set("style",cssWrite(sass))
 					os.chdir(xml[0:xml.rfind("/")+1])
 					tg = xml + " "
-					command = "sed -i \'s|"+ts+"|"+str(etree.tostring(scri))[2:str(etree.tostring(scri)).find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+					tj = str(etree.tostring(scri)).replace(">"," >")
+					command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+					print(command)
 					os.system(command)
 					formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
-				except:
+				except Exception as e:
 					playsound("src/audio/ERROR.ogg")
+					print(e)
 			Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
-			def fresh ():
-				for e in tree[1]:
-					if "style" in e.attrib:
-						print(e.get("style"))
-					if e.tag == "div":
-						for el in e:
-							if "style" in el.attrib:
-								print(e.get("style"))
-			Button(par,text="refrescar",command=fresh).grid(row=7,column=0)
 			tre = Frame(par, background="black")
 			tre.grid(row=6,column=0)
 			xmlTree = ttk.Treeview(tre)
@@ -71,17 +64,11 @@ try:
 			hd = xmlTree.insert("", END, text="HTML")
 			for ele in tree[1]:
 				rl = etree.tostring(ele).decode()
-				if "style" in ele.attrib:
-					ei = xmlTree.insert(hd, END, text=ele.tag, values=(rl))
-				else:
-					ei = xmlTree.insert(hd, END, text=ele.tag)
+				ei = xmlTree.insert(hd, END, text=ele.tag, values=(rl))	
 				if ele.tag == "div":
 					for subele in ele:
 						rl = etree.tostring(subele).decode()
-						if "style" in subele.attrib:
-							ei = xmlTree.insert(hd, END, text=subele.tag, values=(rl))
-						else:
-							ei = xmlTree.insert(hd, END, text=subele.tag)
+						ei = xmlTree.insert(hd, END, text=subele.tag, values=(rl))
 	class inicio:
 		editor = None
 		root = None
