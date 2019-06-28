@@ -163,7 +163,7 @@ def formaHTML (canvas, isL, h, w):
 					if "padding" in element.get("style"):
 						yp += (sizeFormat(tscss["padding"], w) * 2)
 	if "style" in tree[1].attrib:
-		canvas.configure(bg = cssRead(tree[1].get("style"))["background-color"])
+		canvas.configure(bg = cssRead(tree[1].get("style").replace(" ",""))["background-color"].replace(" ",""))
 	canvas.delete("all")
 	format(tree[1], xp, yp)
 def cssWrite(style):
