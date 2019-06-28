@@ -16,17 +16,18 @@ from src.lib.formaHtml import cssWrite
 from playsound import playsound
 try:
 	class editCanva:
+		textColor = (None,"black")
+		backColor = (None,"")
 		def __init__ (self,c, w, h, xml):
 			par = Tk()
-			textColor = "black"
-			backColor = ""
 			par.title("editar")
 			par.geometry("+"+str(w)+"+10")
 			def colorPick ():
-				global textColor
-				textColor = askcolor()
+				self.textColor = askcolor()
+			def bolorPick ():
+				self.backColor = askcolor()
 			Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
-			#Button(par,text="color de fondo", command=self.colorPickBG).grid(row=4,column=0)
+			Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
 			f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
 			parser = etree.HTMLParser()
 			tree = etree.parse(StringIO(f), parser).getroot()
@@ -37,31 +38,38 @@ try:
 					if "style" in scri.attrib:
 						ip = scri.get("style")
 					else:
-						ip = ""
-					global textColor
+						ip = ""	
 					sass = {}
 					if len(ip) > 0:
 						sass = cssRead(ip)
-					sass["color"] = textColor[1]
+					sass["color"] = self.textColor[1]
+					if len(self.backColor[1]) > 1:
+						sass["background-color"] = self.backColor[1]
 					ts = etree.tostring(scri)
-					ts = str(ts)[2:str(ts).find(">")]
+					ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
 					scri.set("style",cssWrite(sass))
 					os.chdir(xml[0:xml.rfind("/")+1])
 					tg = xml + " "
-					tj = str(etree.tostring(scri)).replace(">"," >")
+					tj = str(etree.tostring(scri))
 					command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
 					print(command)
 					os.system(command)
 					formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
 				except Exception as e:
 					playsound("src/audio/ERROR.ogg")
-					print(e)
+					try:
+						from espeak import espeak
+						from tkinter import messagebox
+						messagebox.showerror("Error", str(e))
+						espeak.synth(str(e))
+					except:
+						print(e)
 			Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 			tre = Frame(par, background="black")
 			tre.grid(row=6,column=0)
 			xmlTree = ttk.Treeview(tre)
 			xmlTree.grid(row=0,column=0)
-			hd = xmlTree.insert("", END, text="HTML")
+			hd = xmlTree.insert("", END, text="HTML", values=(etree.tostring(tree[1]).decode()))
 			for ele in tree[1]:
 				rl = etree.tostring(ele).decode()
 				ei = xmlTree.insert(hd, END, text=ele.tag, values=(rl))	
@@ -112,7 +120,6 @@ try:
 					self.v.pack()
 					Label(self.newRoot, text="donde se debe poner el proyecto").pack()
 					def openDir ():
-						#global dir
 						self.dir = filedialog.askdirectory()
 					def crea():
 						os.chdir(self.dir)

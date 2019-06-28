@@ -113,7 +113,7 @@ def cssRead (style):
 		if style != None:
 			tcss = style.split(";")
 			for cs in tcss:
-				css[cs.split(":")[0]] = cs.split(":")[1]
+				css[cs.split(":")[0]] = cs.split(":")[1].replace(" ","")
 	else:
 		css = "ð"
 	if css != "ð":
