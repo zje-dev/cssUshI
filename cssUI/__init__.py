@@ -18,9 +18,13 @@ try:
 	class editCanva:
 		textColor = (None,"black")
 		backColor = (None,"")
+		root = None
 		def __init__ (self,c, w, h, xml):
 			par = Tk()
 			par.title("editar")
+			def nq():
+				pass
+			par.protocol("WM_DELETE_WINDOW",nq)
 			par.geometry("+"+str(w)+"+10")
 			def colorPick ():
 				self.textColor = askcolor()
@@ -77,6 +81,7 @@ try:
 					for subele in ele:
 						rl = etree.tostring(subele).decode()
 						ei = xmlTree.insert(hd, END, text=subele.tag, values=(rl))
+			self.root = par
 	class inicio:
 		editor = None
 		root = None
@@ -89,6 +94,7 @@ try:
 		v = None
 		openendFile = ""
 		cav = None
+		edi = None
 		def __init__ (self, name, master, tk, base):
 			self.root = master
 			self.root.title(name)
@@ -103,6 +109,10 @@ try:
 				self.images.append(tk.PhotoImage(Image.open(filex)))
 				i += 1
 			i = 0
+			def quif ():
+				self.root.destroy()
+				self.edi.root.destroy()
+			self.root.protocol("WM_DELETE_WINDOW",quif)
 			def Open ():
 				self.openendFile = filedialog.askopenfilename(filetypes=(("proyecto cssUshI","*.cui"),("documento HTML", "*.html"),("cualquier tipo","*.*")))
 				editar(self.openendFile)
@@ -164,7 +174,7 @@ try:
 								coma = None
 								b = Button(foor)
 								b.grid(row=1,column=i)
-							ed = editCanva(self.cav, W, H, data)
+							self.edi = editCanva(self.cav, W, H, data)
 							formaHTML(self.cav, data, int(H / 1.5), int(W / 1.5))
 						def isCUI ():
 							isHow.destroy()
