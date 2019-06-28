@@ -16,8 +16,8 @@ from src.lib.formaHtml import cssWrite
 from playsound import playsound
 try:
 	class editCanva:
-		textColor = (None,"black")
-		backColor = (None,"")
+		textColor = [None,"black"]
+		backColor = [None,""]
 		root = None
 		def __init__ (self,c, w, h, xml):
 			par = Tk()
@@ -37,37 +37,36 @@ try:
 			tree = etree.parse(StringIO(f), parser).getroot()
 			def checkD ():
 				ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
-				try:
-					scri = etree.fromstring(ip)
-					if "style" in scri.attrib:
-						ip = scri.get("style")
-					else:
-						ip = ""	
-					sass = {}
-					if len(ip) > 0:
-						sass = cssRead(ip)
-					sass["color"] = self.textColor[1]
-					if len(self.backColor[1]) > 1:
-						sass["background-color"] = self.backColor[1]
-					ts = etree.tostring(scri)
-					ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
-					scri.set("style",cssWrite(sass))
-					os.chdir(xml[0:xml.rfind("/")+1])
-					tg = xml + " "
-					tj = str(etree.tostring(scri))
-					command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
-					print(command)
-					os.system(command)
-					formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
-				except Exception as e:
-					playsound("src/audio/ERROR.ogg")
+				scri = etree.fromstring(ip)
+				if "style" in scri.attrib:
+					ip = scri.get("style")
+				else:
+					ip = ""	
+				sass = {}
+				if len(ip) > 0:
+					sass = cssRead(ip)
 					try:
-						from espeak import espeak
-						from tkinter import messagebox
-						messagebox.showerror("Error", str(e))
-						espeak.synth(str(e))
+						self.textColor[1] = sass["color"]
 					except:
-						print(e)
+						pass
+				sass["color"] = self.textColor[1]
+				if len(self.backColor[1]) > 1:
+					sass["background-color"] = self.backColor[1]
+				ts = etree.tostring(scri)
+				ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
+				scri.set("style",cssWrite(sass))
+				os.chdir(xml[0:xml.rfind("/")+1])
+				tg = xml + " "
+				tj = str(etree.tostring(scri))
+				command = "sed -i \'s|"+ts.replace("background-color"," background-color")+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+				print(command)
+				os.system(command)
+				jTT = tj.replace(ts.replace("background-color"," background-color"),tj[2:tj.find(">")])
+				jT = etree.fromstring(jTT)
+				del(tg)
+				del(jTT)
+				#xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(etree.fromstring(jj).get("style")))
+				formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
 			Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 			tre = Frame(par, background="black")
 			tre.grid(row=6,column=0)

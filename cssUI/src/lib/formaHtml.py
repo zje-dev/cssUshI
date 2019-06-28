@@ -47,7 +47,7 @@ class text:
 				me.fonZise = 14
 		fz(self, parent)
 		if "style" in parent.attrib:
-			self.CSS = cssRead(parent.get("style"))
+			self.CSS = cssRead(parent.get("style").replace(" ",""))
 			if "padding" in parent.get("style"):
 				self.padding = sizeFormat(self.CSS["padding"], w)
 			if "font-size" in parent.get("style"):
