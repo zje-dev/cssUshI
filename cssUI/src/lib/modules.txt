@@ -6,5 +6,4 @@ modules installed
     -lxml
     -io
     -PIL
-    -playsound
 https://steamcommunity.com/profiles/76561198972644663
