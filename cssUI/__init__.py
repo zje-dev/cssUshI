@@ -23,13 +23,15 @@ class editCanva:
 		def nq():
 			pass
 		par.protocol("WM_DELETE_WINDOW",nq)
-		par.geometry("+"+str(w)+"+10")
+		par.geometry("+"+str(int(w / 2))+"+10")
 		def colorPick ():
 			self.textColor = askcolor()
 		def bolorPick ():
 			self.backColor = askcolor()
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
+		Button(par,text="limpiar color", command=bolorPick).grid(row=3,column=1)
+		Button(par,text="limpiar fondo", command=bolorPick).grid(row=4,column=1)
 		f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
 		parser = etree.HTMLParser()
 		tree = etree.parse(StringIO(f), parser).getroot()
