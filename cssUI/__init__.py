@@ -35,6 +35,7 @@ class editCanva:
 		f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
 		parser = etree.HTMLParser()
 		tree = etree.parse(StringIO(f), parser).getroot()
+		fz = Scale(par,from_=0,to=400, orient=HORIZONTAL)
 		def checkD ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
 			scri = etree.fromstring(ip)
@@ -69,9 +70,18 @@ class editCanva:
 			del(jTT)
 			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
+		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
+		Label(par,text="tamaño de fuente").grid(row=8,column=0)
+		pt = ttk.Combobox(par)
+		pt["values"] = ["px (pixeles)","% (porcentaje)"]
+		pt.grid(row=10,column=0)
 		tre = Frame(par, background="black")
 		tre.grid(row=6,column=0)
 		xmlTree = ttk.Treeview(tre)
+		fz.grid(row=11,column=0, columnspan=2, sticky=E+W)
+		Label(par,text="fijar directamente el tamaño del texto").grid(row=12,column=0)
+		fsf = Entry(par).grid(row=13,column=0)
+		ttk.Separator(par,orient="horizontal").grid(row=14,column=0,sticky="we")
 		xmlTree.grid(row=0,column=0)
 		hd = xmlTree.insert("", END, text="HTML", values=(etree.tostring(tree[1]).decode()))
 		for ele in tree[1]:
