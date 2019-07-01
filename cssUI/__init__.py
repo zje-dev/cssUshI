@@ -25,13 +25,24 @@ class editCanva:
 		par.protocol("WM_DELETE_WINDOW",nq)
 		par.geometry("+"+str(int(w / 2))+"+10")
 		def colorPick ():
-			self.textColor = askcolor()
+			self.textColor = list(askcolor())
 		def bolorPick ():
-			self.backColor = askcolor()
+			self.backColor = list(askcolor())
+		def bolorPickt ():
+			self.textColor = [None,"#000000"]
+		Label(par,text="tamaño").grid(row=8,column=0,columnspan=2)
+		tipoDeTama = ttk.Combobox(par)
+		tipoDeTama["values"] = ["tamaño de fuente","ancho","alto"]
+		tipoDeTama.grid(row=9,column=0,columnspan=2)
+		tamano = Scale(par,from_=0,to=300,orient="horizontal")
+		tamano.grid(row=10,column=0,columnspan=2, sticky=W+E)
+		Label(par, text="fijar directamente el tamaño").grid(row=11,column = 0,columnspan=2)
+		dire = Entry(par)
+		dire.grid(row=12,column=0,columnspan=2)
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
-		Button(par,text="limpiar color", command=bolorPick).grid(row=3,column=1)
-		Button(par,text="limpiar fondo", command=bolorPick).grid(row=4,column=1)
+		Button(par,text="limpiar color", command=bolorPickt).grid(row=3,column=1)
+		Button(par,text="limpiar fondo", command=bolorPickt).grid(row=4,column=1)
 		f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
 		parser = etree.HTMLParser()
 		tree = etree.parse(StringIO(f), parser).getroot()
@@ -42,14 +53,9 @@ class editCanva:
 			if "style" in scri.attrib:
 				ip = scri.get("style")
 			else:
-				ip = ""	
+				ip = ""
+			#dire.get()
 			sass = {}
-			if len(ip) > 0:
-				sass = cssRead(ip)
-				try:
-					self.textColor[1] = sass["color"]
-				except:
-					pass
 			sass["color"] = self.textColor[1]
 			if len(self.backColor[1]) > 1:
 				sass["background-color"] = self.backColor[1]
@@ -60,25 +66,14 @@ class editCanva:
 			tg = xml + " "
 			tj = str(etree.tostring(scri))
 			command = "sed -i \'s|"+ts.replace("background-color"," background-color")+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
-			print(command)
 			os.system(command)
 			jTT = tj.replace(ts.replace("background-color"," background-color"),tj[2:tj.find(">")])[2:-1]
-			print(xmlTree.item(xmlTree.focus()))
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(jTT))
-			print(xmlTree.item(xmlTree.focus()))
 			del(tg)
 			del(jTT)
 			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
-		Label(par,text="tamaño").grid(row=8,column=0,columnspan=2)
-		tipoDeTama = ttk.Combobox(par)
-		tipoDeTama["values"] = ["tamaño de fuente","ancho","alto"]
-		tipoDeTama.grid(row=9,column=0,columnspan=2)
-		tamano = Scale(par,from_=0,to=400,orient="horizontal")
-		tamano.grid(row=10,column=0,columnspan=2, sticky=W+E)
-		Label(par, text="fijar directamente el tamaño").grid(row=11,column = 0,columnspan=2)
-		dire = Entry(par)
 		tre = Frame(par, background="black")
 		tre.grid(row=6,column=0)
 		xmlTree = ttk.Treeview(tre)
