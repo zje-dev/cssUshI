@@ -121,13 +121,20 @@ class inicio:
 		def Open ():
 			self.openendFile = filedialog.askopenfilename(filetypes=(("proyecto cssUshI","*.cui"),("documento HTML", "*.html"),("cualquier tipo","*.*")))
 			editar(self.openendFile)
+		def backUp ():
+			if len(self.openendFile) > 0:
+				oof = self.openendFile + " "
+				comandev = "cp "+oof+" "+os.getcwd()+oof[oof.rfind("/") + 1:-1]
+				print(comandev)
 		def organizar (arr, i):
 			for e in arr:
 				filex = "src/img/i"+str(i)+".png"
-				e.grid(row=0,column=i+2)
+				e.grid(row=0,column=i)
 				e.configure(image=self.images[i])
 				if i == 0:
 					e.configure(command=Open)
+				if i == 1:
+					e.configure(command=backUp)
 				i += 1
 		organizar(self.tmp, i)
 		def editar (data):
@@ -151,16 +158,13 @@ class inicio:
 						self.cav.grid(row=0,column=1,sticky="we")
 						isHow.destroy()
 						i = 0
-						for i in range(3):
-							coma = None
-							b = Button(foor)
-							b.grid(row=1,column=i)
 						self.edi = editCanva(self.cav, W, H, data)
 						formaHTML(self.cav, data, int(H / 1.5), int(W / 1.5))
 					def isCUI ():
 						isHow.destroy()
 					Button(isHow,text="HTML", command=isHTML).pack(fill=X)
 					Button(isHow,text="proyecto", command=isCUI).pack(fill=X)
+		Label(self.root,text="cssUshI por zje 2019").grid(row=29,column=0)
 root = Tk()
 app = inicio("cssUshI", root, ImageTk, Tk)
 root.mainloop()

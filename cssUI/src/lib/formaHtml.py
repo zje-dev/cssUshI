@@ -157,11 +157,16 @@ def formaHTML (canvas, isL, h, w):
 				xp = 0
 			elif element.tag in textag:
 				ele = text(element, xp, yp, canvas, w, h, 0, NW)
-				xp += ele.fonZise * len(ele.text)
+				xp += (ele.fonZise  - (ele.fonZise  / 2.5)) * len(ele.text)
 				if "style" in element.attrib:
 					tscss = cssRead(element.get("style"))
 					if "padding" in element.get("style"):
 						yp += (sizeFormat(tscss["padding"], w) * 2)
+				bigText = ["h1","h2","h3","h4","h5","h6"]
+				if element.tag in bigText:
+					yp += h / (19 - int(element.tag[1]))
+					xp = 0
+				#TODO fix'd
 	if "style" in tree[1].attrib:
 		canvas.configure(bg = cssRead(tree[1].get("style").replace(" ",""))["background-color"].replace(" ",""))
 	canvas.delete("all")
