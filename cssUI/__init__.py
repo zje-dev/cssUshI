@@ -108,7 +108,7 @@ class inicio:
 		i = 0
 		W = self.root.winfo_screenwidth()
 		H = self.root.winfo_screenheight()
-		for _ in range(5):
+		for _ in range(2):
 			self.tmp.append(Button(self.root))
 			filex = "src/img/i"+str(i)+".png"
 			self.images.append(tk.PhotoImage(Image.open(filex)))
@@ -121,36 +121,12 @@ class inicio:
 		def Open ():
 			self.openendFile = filedialog.askopenfilename(filetypes=(("proyecto cssUshI","*.cui"),("documento HTML", "*.html"),("cualquier tipo","*.*")))
 			editar(self.openendFile)
-		def newF ():
-			if self.newRoot is None:
-				self.newRoot = base()
-				def quit ():
-					self.newRoot.destroy()
-					self.newRoot = None
-				self.newRoot.protocol('WM_DELETE_WINDOW', quit)
-				self.newRoot.title(" crear proyecto  ")
-				self.newRoot.resizable(False, False)
-				Label(self.newRoot, text="nombre del proyecto").pack()
-				self.v = Entry(self.newRoot)
-				self.v.pack()
-				Label(self.newRoot, text="donde se debe poner el proyecto").pack()
-				def openDir ():
-					self.dir = filedialog.askdirectory()
-				def crea():
-					os.chdir(self.dir)
-					os.system("touch "+self.v.get()+".cui")
-					quit()
-					editar(0)
-				Button(self.newRoot, command=openDir, text="selecciona una carpeta").pack()
-				Button(self.newRoot, command=crea, text="crear").pack()
 		def organizar (arr, i):
 			for e in arr:
 				filex = "src/img/i"+str(i)+".png"
 				e.grid(row=0,column=i+2)
 				e.configure(image=self.images[i])
 				if i == 0:
-					e.configure(command=newF)
-				elif i == 4:
 					e.configure(command=Open)
 				i += 1
 		organizar(self.tmp, i)
