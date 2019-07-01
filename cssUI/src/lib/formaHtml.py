@@ -166,7 +166,6 @@ def formaHTML (canvas, isL, h, w):
 				if element.tag in bigText:
 					yp += h / (19 - int(element.tag[1]))
 					xp = 0
-				#TODO fix'd
 	if "style" in tree[1].attrib:
 		canvas.configure(bg = cssRead(tree[1].get("style").replace(" ",""))["background-color"].replace(" ",""))
 	canvas.delete("all")

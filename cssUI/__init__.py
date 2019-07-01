@@ -124,7 +124,7 @@ class inicio:
 		def backUp ():
 			if len(self.openendFile) > 0:
 				oof = self.openendFile + " "
-				comandev = "cp "+oof+" "+os.getcwd()+oof[oof.rfind("/") + 1:-1]
+				comandev = "cp "+oof+" "+os.getcwd()+"/proyectos"+oof[oof.rfind("/"):-1]
 				print(comandev)
 		def organizar (arr, i):
 			for e in arr:
