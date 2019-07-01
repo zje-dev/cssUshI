@@ -125,7 +125,7 @@ class inicio:
 			if len(self.openendFile) > 0:
 				oof = self.openendFile + " "
 				comandev = "cp "+oof+" "+os.getcwd()+"/proyectos"+oof[oof.rfind("/"):-1]
-				print(comandev)
+				os.system(comandev)
 		def organizar (arr, i):
 			for e in arr:
 				filex = "src/img/i"+str(i)+".png"
