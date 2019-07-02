@@ -17,6 +17,21 @@ class editCanva:
 	textColor = [None,"black"]
 	backColor = [None,""]
 	root = None
+	opciones = None
+	class tamanos (ttk.Frame):
+		def __init__(self, *args, **kwargs):
+			Label(self,text="tamaño").grid(row=8,column=0,columnspan=2)
+			tipoDeTama = ttk.Combobox(self)
+			tipoDeTama["values"] = ["tamaño de fuente","ancho","alto"]
+			tipoDeTama.grid(row=9,column=0,columnspan=1)
+			tipoDemo = ttk.Combobox(self)
+			tipoDemo["values"] = ["px (pixeles)","% (porcentaje)"]
+			tipoDemo.grid(row=9,column=1,columnspan=2)
+			tamano = Scale(self,from_=0,to=300,orient="horizontal")
+			tamano.grid(row=10,column=0,columnspan=2, sticky=W+E)
+			Label(self, text="fijar directamente el tamaño").grid(row=11,column = 0,columnspan=2)
+			dire = Entry(self)
+			dire.grid(row=12,column=0,columnspan=2)
 	def __init__ (self,c, w, h, xml):
 		par = Tk()
 		par.title("editar")
@@ -30,18 +45,10 @@ class editCanva:
 			self.backColor = list(askcolor())
 		def bolorPickt ():
 			self.textColor = [None,"#000000"]
-		Label(par,text="tamaño").grid(row=8,column=0,columnspan=2)
-		tipoDeTama = ttk.Combobox(par)
-		tipoDeTama["values"] = ["tamaño de fuente","ancho","alto"]
-		tipoDeTama.grid(row=9,column=0,columnspan=1)
-		tipoDemo = ttk.Combobox(par)
-		tipoDemo["values"] = ["px (pixeles)","% (porcentaje)"]
-		tipoDemo.grid(row=9,column=1,columnspan=2)
-		tamano = Scale(par,from_=0,to=300,orient="horizontal")
-		tamano.grid(row=10,column=0,columnspan=2, sticky=W+E)
-		Label(par, text="fijar directamente el tamaño").grid(row=11,column = 0,columnspan=2)
-		dire = Entry(par)
-		dire.grid(row=12,column=0,columnspan=2)
+		self.opciones = ttk.Notebook(par)
+		self.opciones.grid(row=8,column=0)
+		self.opciones.add(self.tamanos, text="tamaños", padding=5)
+		#self.opciones.add(, text="font", padding=5)
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
 		Button(par,text="limpiar color", command=bolorPickt).grid(row=3,column=1)
