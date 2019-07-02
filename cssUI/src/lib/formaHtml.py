@@ -131,7 +131,8 @@ def formaHTML (canvas, isL, h, w):
 	f = os.popen("cd "+isL[0:isL.rfind("/")+1]+"; cat "+isL[isL.rfind("/")+1:-1]).read()
 	parser = etree.HTMLParser()
 	tree = etree.parse(StringIO(f), parser).getroot()
-	def format (body, xp, yp):
+	it = 0
+	def format (body, xp, yp, i):
 		for element in body:
 			if element.tag == "div" or element.tag == "center":
 				if "style" in element.attrib:
@@ -169,7 +170,7 @@ def formaHTML (canvas, isL, h, w):
 	if "style" in tree[1].attrib:
 		canvas.configure(bg = cssRead(tree[1].get("style").replace(" ",""))["background-color"].replace(" ",""))
 	canvas.delete("all")
-	format(tree[1], xp, yp)
+	format(tree[1], xp, yp, it)
 def cssWrite(style):
 	c = ""
 	if not style == "":

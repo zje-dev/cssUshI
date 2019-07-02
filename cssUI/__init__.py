@@ -87,7 +87,7 @@ class editCanva:
 			ei = xmlTree.insert(hd, END, text=ele.tag, values=(rl))	
 			if ele.tag == "div":
 				for subele in ele:
-					rl = etree.tostring(subele).decode()
+					rl = etree.tostring(subele)
 					ei = xmlTree.insert(hd, END, text=subele.tag, values=(rl))
 		self.root = par
 class inicio:
