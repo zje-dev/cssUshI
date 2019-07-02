@@ -33,7 +33,10 @@ class editCanva:
 		Label(par,text="tamaño").grid(row=8,column=0,columnspan=2)
 		tipoDeTama = ttk.Combobox(par)
 		tipoDeTama["values"] = ["tamaño de fuente","ancho","alto"]
-		tipoDeTama.grid(row=9,column=0,columnspan=2)
+		tipoDeTama.grid(row=9,column=0,columnspan=1)
+		tipoDemo = ttk.Combobox(par)
+		tipoDemo["values"] = ["px (pixeles)","% (porcentaje)"]
+		tipoDemo.grid(row=9,column=1,columnspan=2)
 		tamano = Scale(par,from_=0,to=300,orient="horizontal")
 		tamano.grid(row=10,column=0,columnspan=2, sticky=W+E)
 		Label(par, text="fijar directamente el tamaño").grid(row=11,column = 0,columnspan=2)
