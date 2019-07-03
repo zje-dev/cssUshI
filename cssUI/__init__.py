@@ -18,20 +18,6 @@ class editCanva:
 	backColor = [None,""]
 	root = None
 	opciones = None
-	class tamanos (ttk.Frame):
-		def __init__(self, *args, **kwargs):
-			Label(self,text="tamaño").grid(row=8,column=0,columnspan=2)
-			tipoDeTama = ttk.Combobox(self)
-			tipoDeTama["values"] = ["tamaño de fuente","ancho","alto"]
-			tipoDeTama.grid(row=9,column=0,columnspan=1)
-			tipoDemo = ttk.Combobox(self)
-			tipoDemo["values"] = ["px (pixeles)","% (porcentaje)"]
-			tipoDemo.grid(row=9,column=1,columnspan=2)
-			tamano = Scale(self,from_=0,to=300,orient="horizontal")
-			tamano.grid(row=10,column=0,columnspan=2, sticky=W+E)
-			Label(self, text="fijar directamente el tamaño").grid(row=11,column = 0,columnspan=2)
-			dire = Entry(self)
-			dire.grid(row=12,column=0,columnspan=2)
 	def __init__ (self,c, w, h, xml):
 		par = Tk()
 		par.title("editar")
@@ -47,8 +33,26 @@ class editCanva:
 			self.textColor = [None,"#000000"]
 		self.opciones = ttk.Notebook(par)
 		self.opciones.grid(row=8,column=0)
-		self.opciones.add(self.tamanos, text="tamaños", padding=5)
-		#self.opciones.add(, text="font", padding=5)
+		tam = Frame(par)
+		Label(tam,text="tamaño").grid(row=8,column=0,columnspan=2)
+		tipoDeTama = ttk.Combobox(tam)
+		tipoDeTama["values"] = ["tamaño de fuente","ancho","alto"]
+		tipoDeTama.grid(row=9,column=0,columnspan=1)
+		tipoDemo = ttk.Combobox(tam)
+		tipoDemo["values"] = ["px (pixeles)","% (porcentaje)"]
+		tipoDemo.grid(row=9,column=1,columnspan=2)
+		tamano = Scale(tam,from_=0,to=300,orient="horizontal")
+		tamano.grid(row=10,column=0,columnspan=2, sticky=W+E)
+		Label(tam, text="fijar directamente el tamaño").grid(row=11,column = 0,columnspan=2)
+		dire = Entry(tam)
+		dire.grid(row=12,column=0,columnspan=2)
+		self.opciones.add(tam, text="tamaños", padding=5)
+		fonnnt = Frame(par)
+		fonts = ["bold","italic"]
+		tipoDeLetra = ttk.Combobox(fonnnt)
+		tipoDeLetra["values"] = fonts
+		tipoDeLetra.grid(row=0,column=0)
+		self.opciones.add(fonnnt, text="fuente", padding=5)
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
 		Button(par,text="limpiar color", command=bolorPickt).grid(row=3,column=1)
@@ -67,8 +71,9 @@ class editCanva:
 			#dire.get()
 			sass = {}
 			sass["color"] = self.textColor[1]
-			if len(self.backColor[1]) > 1:
-				sass["background-color"] = self.backColor[1]
+			if self.backColor[1] != None:
+				if len(self.backColor[1]) > 1:
+					sass["background-color"] = self.backColor[1]
 			ts = etree.tostring(scri)
 			ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
 			scri.set("style",cssWrite(sass))

@@ -58,6 +58,8 @@ class text:
 					self.bg = c.create_rectangle(x, y, len(self.text) * self.fonZise, y + (self.fonZise * (1.5 + (self.padding * 0.14))), fill=self.background_color, outline="")
 		if parent.tag == "b":
 			self.texType = "bold"
+		if parent.tag == "i":
+			self.texType = "italic"
 		if len(self.CSS) > 0:
 			self.color = self.CSS["color"].replace(" ","")
 		self.color.replace(" ","")
