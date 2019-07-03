@@ -181,3 +181,12 @@ def cssWrite(style):
 				del style[sub]
 		c = str(style).replace("{","").replace("}","").replace(",",";").replace('\'',"").replace("\"","")
 	return c
+def parOne(canvas, data, w, h):
+	px1, px2 = 0, 0
+	canvas.delete("all")
+	if data[1:5] == "body" or len(data) < 2:
+		pass
+	else:
+		exm = etree.fromstring(data)
+		if exm.tag in textag:
+			ele = text(exm, px1, px2, canvas, w, h, 0, NW)

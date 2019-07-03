@@ -13,6 +13,7 @@ from PIL import *
 from src.lib.formaHtml import formaHTML
 from src.lib.formaHtml import cssRead
 from src.lib.formaHtml import cssWrite
+from src.lib.formaHtml import parOne
 class editCanva:
 	textColor = [None,"black"]
 	backColor = [None,""]
@@ -58,6 +59,8 @@ class editCanva:
 		etiqueta["values"] = ["span","b","i","sub","sup","h1","h2","h3","h4","h5","h6"]
 		etiqueta.grid(row=1,column=1)
 		self.opciones.add(fonnnt, text="fuente & etiqueta", padding=5)
+		grupos = Frame(par)
+		self.opciones.add(grupos, text="grupos", padding=5)
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
 		Button(par,text="limpiar color", command=bolorPickt).grid(row=3,column=1)
@@ -96,12 +99,18 @@ class editCanva:
 		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
 		tre = Frame(par, background="black")
 		tre.grid(row=6,column=0)
+		cPreView = Canvas(par,width=w/6,height=h/4)
+		cPreView.grid(row=6,column=1)
 		xmlTree = ttk.Treeview(tre)
+		def preV (event):
+			selected = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
+			parOne(cPreView, selected,w/6,h/4)
+		xmlTree.bind("<ButtonPress-1>", preV)
 		xmlTree.grid(row=0,column=0)
 		hd = xmlTree.insert("", END, text="HTML", values=(etree.tostring(tree[1]).decode()))
 		for ele in tree[1]:
 			rl = etree.tostring(ele).decode()
-			ei = xmlTree.insert(hd, END, text=ele.tag, values=(rl))	
+			ei = xmlTree.insert(hd, END, text=ele.tag, values=(rl))
 			if ele.tag == "div":
 				for subele in ele:
 					rl = etree.tostring(subele)
