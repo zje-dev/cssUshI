@@ -48,11 +48,16 @@ class editCanva:
 		dire.grid(row=12,column=0,columnspan=2)
 		self.opciones.add(tam, text="tamaños", padding=5)
 		fonnnt = Frame(par)
-		fonts = ["bold","italic"]
+		fonts = ["bold","italic", "normal"]
 		tipoDeLetra = ttk.Combobox(fonnnt)
 		tipoDeLetra["values"] = fonts
-		tipoDeLetra.grid(row=0,column=0)
-		self.opciones.add(fonnnt, text="fuente", padding=5)
+		tipoDeLetra.grid(row=0,column=1)
+		Label(fonnnt,text="tipo de letra: ").grid(row=0,column=0)
+		Label(fonnnt,text="la etiqueta: ").grid(row=1,column=0)
+		etiqueta = ttk.Combobox(fonnnt)
+		etiqueta["values"] = ["span","b","i","sub","sup","h1","h2","h3","h4","h5","h6"]
+		etiqueta.grid(row=1,column=1)
+		self.opciones.add(fonnnt, text="fuente & etiqueta", padding=5)
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
 		Button(par,text="limpiar color", command=bolorPickt).grid(row=3,column=1)
