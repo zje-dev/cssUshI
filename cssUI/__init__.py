@@ -32,22 +32,10 @@ class editCanva:
 			self.backColor = list(askcolor())
 		def bolorPickt ():
 			self.textColor = [None,"#000000"]
+		def bolortPick ():
+			self.backColor = [None,""]
 		self.opciones = ttk.Notebook(par)
 		self.opciones.grid(row=8,column=0)
-		tam = Frame(par)
-		Label(tam,text="tamaño").grid(row=8,column=0,columnspan=2)
-		tipoDeTama = ttk.Combobox(tam)
-		tipoDeTama["values"] = ["tamaño de fuente","ancho","alto"]
-		tipoDeTama.grid(row=9,column=0,columnspan=1)
-		tipoDemo = ttk.Combobox(tam)
-		tipoDemo["values"] = ["px (pixeles)","% (porcentaje)"]
-		tipoDemo.grid(row=9,column=1,columnspan=2)
-		tamano = Scale(tam,from_=0,to=300,orient="horizontal")
-		tamano.grid(row=10,column=0,columnspan=2, sticky=W+E)
-		Label(tam, text="fijar directamente el tamaño").grid(row=11,column = 0,columnspan=2)
-		dire = Entry(tam)
-		dire.grid(row=12,column=0,columnspan=2)
-		self.opciones.add(tam, text="tamaños", padding=5)
 		fonnnt = Frame(par)
 		fonts = ["bold","italic", "normal"]
 		tipoDeLetra = ttk.Combobox(fonnnt)
@@ -58,13 +46,20 @@ class editCanva:
 		etiqueta = ttk.Combobox(fonnnt)
 		etiqueta["values"] = ["span","b","i","sub","sup","h1","h2","h3","h4","h5","h6"]
 		etiqueta.grid(row=1,column=1)
-		self.opciones.add(fonnnt, text="fuente & etiqueta", padding=5)
+		Label(fonnnt,text="tamaño de fuente: ").grid(row=2,column=0)
+		sc = Scale(fonnnt,from_=0,to=300,orient=HORIZONTAL)
+		sc.grid(row=2,column=1,columnspan=2)
+		tipTex = ttk.Combobox(fonnnt)
+		tipTex["values"] = ["px","%"]
+		Label(fonnnt,text="formato de tamaño: ").grid(row=3,column=0)
+		tipTex.grid(row=3,column=1)
+		self.opciones.add(fonnnt, text="fuente y etiquetas", padding=5)
 		grupos = Frame(par)
 		self.opciones.add(grupos, text="grupos", padding=5)
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
 		Button(par,text="limpiar color", command=bolorPickt).grid(row=3,column=1)
-		Button(par,text="limpiar fondo", command=bolorPickt).grid(row=4,column=1)
+		Button(par,text="limpiar fondo", command=bolortPick).grid(row=4,column=1)
 		f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
 		parser = etree.HTMLParser()
 		tree = etree.parse(StringIO(f), parser).getroot()
@@ -95,6 +90,7 @@ class editCanva:
 			del(tg)
 			del(jTT)
 			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
+			preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
 		tre = Frame(par, background="black")
@@ -176,7 +172,12 @@ class inicio:
 					render = Canvas(foor, background="white")
 					render.grid(row=0,column=1,sticky="we")
 				elif type == ".html":
-					pass
+					self.root.attributes('-zoomed', True)
+					self.cav = Canvas(foor, background="white", width = W / 1.3, height = H / 1.3)
+					self.cav.grid(row=0,column=1,sticky="we")
+					i = 0
+					self.edi = editCanva(self.cav, W, H, data)
+					formaHTML(self.cav, data, int(H / 1.5), int(W / 1.5))
 				else:
 					isHow = base()
 					isHow.title(" ")
@@ -199,6 +200,5 @@ app = inicio("cssUshI", root, ImageTk, Tk)
 root.mainloop()
 """
 TODO
--hacer una lista con cada elemento del HTML para usar el index para cambiar el texto
 -mejorar el sistema HTML render
 """
