@@ -216,5 +216,4 @@ root.mainloop()
 """
 TODO
 -mejorar el sistema HTML render
-se puede ganar dinero de dos formas. (1*): simplemente hacer de código cerrado el programa/sitio (2*) existen compañías y org's que le pagan a programadores para ayudar a la comunidad
 """
