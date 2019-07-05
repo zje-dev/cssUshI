@@ -52,10 +52,6 @@ class text:
 				self.padding = sizeFormat(self.CSS["padding"], w)
 			if "font-size" in parent.get("style"):
 				self.fonZise = sizeFormat(self.CSS["font-size"], w)
-			if "background-color" in parent.get("style"):
-				self.background_color = self.CSS["background-color"]
-				if self.background_color != " ":
-					self.bg = c.create_rectangle(x, y, len(self.text) * self.fonZise, y + (self.fonZise * (1.5 + (self.padding * 0.14))), fill=self.background_color, outline="")
 		if parent.tag == "b":
 			self.texType = "bold"
 		if parent.tag == "i":
