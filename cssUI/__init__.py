@@ -37,11 +37,6 @@ class editCanva:
 		self.opciones = ttk.Notebook(par)
 		self.opciones.grid(row=8,column=0)
 		fonnnt = Frame(par)
-		fonts = ["bold","italic", "normal"]
-		tipoDeLetra = ttk.Combobox(fonnnt)
-		tipoDeLetra["values"] = fonts
-		tipoDeLetra.grid(row=0,column=1)
-		Label(fonnnt,text="tipo de letra: ").grid(row=0,column=0)
 		Label(fonnnt,text="la etiqueta: ").grid(row=1,column=0)
 		etiqueta = ttk.Combobox(fonnnt)
 		etiqueta["values"] = ["span","b","i","sub","sup","h1","h2","h3","h4","h5","h6"]
@@ -53,13 +48,14 @@ class editCanva:
 		tipTex["values"] = ["px","%"]
 		Label(fonnnt,text="formato de tamaño: ").grid(row=3,column=0)
 		tipTex.grid(row=3,column=1)
-		self.opciones.add(fonnnt, text="fuente y etiquetas", padding=5)
+		self.opciones.add(fonnnt, text="fuente y etiqueta", padding=5)
 		grupos = Frame(par)
 		self.opciones.add(grupos, text="grupos", padding=5)
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
 		Button(par,text="color de fondo", command=bolorPick).grid(row=4,column=0)
 		Button(par,text="limpiar color", command=bolorPickt).grid(row=3,column=1)
 		Button(par,text="limpiar fondo", command=bolortPick).grid(row=4,column=1)
+		Button(par,text="quitar estilo",activebackground="#a60000",bg="red").grid(row=5,column=1)
 		f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
 		parser = etree.HTMLParser()
 		tree = etree.parse(StringIO(f), parser).getroot()
@@ -81,11 +77,17 @@ class editCanva:
 			ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
 			scri.set("style",cssWrite(sass))
 			os.chdir(xml[0:xml.rfind("/")+1])
+			if len(etiqueta.get()) > 0:
+				scri.tag = etiqueta.get()
 			tg = xml + " "
 			tj = str(etree.tostring(scri))
-			command = "sed -i \'s|"+ts.replace("background-color"," background-color")+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+			command = "sed -i \'s|"+ts.replace(";","; ")+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
 			os.system(command)
-			jTT = tj.replace(ts.replace("background-color"," background-color"),tj[2:tj.find(">")])[2:-1]
+			print(command)
+			jTT = tj.replace(ts.replace(";","; "),tj[2:tj.find(">")])[2:-1]
+			if len(etiqueta.get()) > 0:
+				command = "sed -i \'s|"+ts[ts.find("</"):-1]+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+				print(command)
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(jTT))
 			del(tg)
 			del(jTT)
@@ -201,4 +203,5 @@ root.mainloop()
 """
 TODO
 -mejorar el sistema HTML render
+se puede ganar dinero de dos formas. (1*): simplemente hacer de código cerrado el programa/sitio (2*) existen compañías y org's que le pagan a programadores para ayudar a la comunidad
 """

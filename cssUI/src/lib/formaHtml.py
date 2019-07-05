@@ -115,7 +115,7 @@ def cssRead (style):
 		if style != None:
 			tcss = style.split(";")
 			for cs in tcss:
-				css[cs.split(":")[0]] = cs.split(":")[1].replace(" ","")
+				css[cs.split(":")[0].replace(" ","")] = cs.split(":")[1].replace(" ","")
 	else:
 		css = "ð"
 	if css != "ð":
@@ -169,8 +169,11 @@ def formaHTML (canvas, isL, h, w):
 				if element.tag in bigText:
 					yp += h / (19 - int(element.tag[1]))
 					xp = 0
-	if "style" in tree[1].attrib:
-		canvas.configure(bg = cssRead(tree[1].get("style").replace(" ",""))["background-color"].replace(" ",""))
+	try:
+		if "style" in tree[1].attrib:
+			canvas.configure(bg = cssRead(tree[1].get("style").replace(" ",""))["background-color"].replace(" ",""))
+	except:
+		canvas.configure(bg="white")
 	canvas.delete("all")
 	format(tree[1], xp, yp, it)
 def cssWrite(style):
