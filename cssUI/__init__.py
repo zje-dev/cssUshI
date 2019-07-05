@@ -52,11 +52,13 @@ class editCanva:
 		grupos = Frame(par)
 		self.opciones.add(grupos, text="grupos", padding=5)
 		def quitCool ():
+			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
 			scri = etree.fromstring(ip)
 			ts = etree.tostring(scri)
 			ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
-			del(scri.attrib["style"])
+			if "style" in scri.attrib:
+				del(scri.attrib["style"])
 			tj = str(etree.tostring(scri))
 			command = "sed -i \'s|"+ts.replace(";","; ")+"|"+tj[2:tj.find(">")]+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
 			os.chdir(xml[0:xml.rfind("/")+1])
