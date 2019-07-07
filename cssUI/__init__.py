@@ -84,6 +84,8 @@ class editCanva:
 				ip = ""
 			#dire.get()
 			sass = {}
+			if sc.get() > 0:
+				sass["font-size"] = (sc.get() + tipTex.get())
 			sass["color"] = self.textColor[1]
 			if self.backColor[1] != None:
 				if len(self.backColor[1]) > 1:
