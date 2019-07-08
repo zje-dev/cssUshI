@@ -19,6 +19,7 @@ class editCanva:
 	backColor = [None,""]
 	root = None
 	opciones = None
+	imap = None
 	def __init__ (self,c, w, h, xml):
 		par = Tk()
 		par.title("editar")
@@ -116,8 +117,15 @@ class editCanva:
 		tre.grid(row=6,column=0)
 		xmlTree = ttk.Treeview(tre)
 		def preV (event):
+			if self.imap == None:
+				self.imap = Frame(par)
+				self.imap.grid(row=6,column=1)
+			else:
+				self.imap.destroy()
+				self.imap = Frame(par)
+				self.imap.grid(row=6,column=1)
 			selected = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
-			parOne(par,selected,w/6,h/4)
+			parOne(self.imap,selected)
 		xmlTree.bind("<ButtonPress-1>", preV)
 		xmlTree.grid(row=0,column=0)
 		hd = xmlTree.insert("", END, text="HTML", values=(etree.tostring(tree[1]).decode()))
@@ -207,7 +215,7 @@ class inicio:
 						isHow.destroy()
 						i = 0
 						self.edi = editCanva(self.cav, W, H, data)
-						formaHTML(self.cav, data, int(H / 1.5), int(W / 1.5))
+						formaHTML(self.cav, data)
 					def isCUI ():
 						isHow.destroy()
 					Button(isHow,text="HTML", command=isHTML).pack(fill=X)
