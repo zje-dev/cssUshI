@@ -10,10 +10,10 @@ from tkinter.colorchooser import *
 from PIL import Image, ImageTk
 from json import *
 from PIL import *
-from src.lib.formaHtml import formaHTML
+from src.lib.ttkHTML import formaHTML
 from src.lib.formaHtml import cssRead
 from src.lib.formaHtml import cssWrite
-from src.lib.formaHtml import parOne
+from src.lib.ttkHTML import parOne
 class editCanva:
 	textColor = [None,"black"]
 	backColor = [None,""]
@@ -114,12 +114,10 @@ class editCanva:
 		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
 		tre = Frame(par, background="black")
 		tre.grid(row=6,column=0)
-		cPreView = Canvas(par,width=w/6,height=h/4)
-		cPreView.grid(row=6,column=1)
 		xmlTree = ttk.Treeview(tre)
 		def preV (event):
 			selected = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
-			parOne(cPreView, selected,w/6,h/4)
+			parOne(par,selected,w/6,h/4)
 		xmlTree.bind("<ButtonPress-1>", preV)
 		xmlTree.grid(row=0,column=0)
 		hd = xmlTree.insert("", END, text="HTML", values=(etree.tostring(tree[1]).decode()))
@@ -192,7 +190,8 @@ class inicio:
 					render.grid(row=0,column=1,sticky="we")
 				elif type == ".html":
 					self.root.attributes('-zoomed', True)
-					self.cav = Canvas(foor, background="white", width = W / 1.3, height = H / 1.3)
+		#			self.cav = Canvas(foor, background="white", width = W / 1.3, height = H / 1.3)
+					self.cav = Frame(foor,bg="white")
 					self.cav.grid(row=0,column=1,sticky="we")
 					i = 0
 					self.edi = editCanva(self.cav, W, H, data)
