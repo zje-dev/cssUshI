@@ -10,8 +10,12 @@ textTag = ["b","i","sup","sub","span","h1","h2","h3","h4","h5","h6"]
 class text:
 	def __init__(self,elem,par):
 		element = etree.fromstring(elem)
-		#if "style" in element.atrib:
-		Label(par,text=element.text).grid(row=yp,column=xp,sticky=N+W)
+		t = Label(par,text=element.text)
+		t.grid(row=yp,column=xp,sticky=N+W)
+		if "style" in element.attrib:
+			pass
+		else:
+			t["bg"] = t.master["bg"]
 def formaHTML (canvas, isL):
 	inf =  os.popen("cat "+ isL).read()
 	parser = etree.HTMLParser()
@@ -19,11 +23,12 @@ def formaHTML (canvas, isL):
 	for elemint in tree[1]:
 		parOne(canvas,etree.tostring(elemint))
 def parOne (parent,data):
-	ele = etree.fromstring(data)
-	global xp, yp
-	if ele.tag in textTag:
-		text(etree.tostring(ele), parent)
-		xp += 1
-	elif ele.tag == "br":
-		xp = 0
-		yp += 1
+	if len(data) > 1:
+		ele = etree.fromstring(data)
+		global xp, yp
+		if ele.tag in textTag:
+			text(etree.tostring(ele), parent)
+			xp += 1
+		elif ele.tag == "br":
+			xp = 0
+			yp += 1
