@@ -7,7 +7,6 @@ from lxml import etree
 from io import StringIO, BytesIO
 from tkinter import filedialog
 from tkinter.colorchooser import *
-from PIL import Image, ImageTk
 from json import *
 from PIL import *
 from src.lib.ttkHTML import formaHTML
@@ -38,17 +37,9 @@ class editCanva:
 		self.opciones = ttk.Notebook(par)
 		self.opciones.grid(row=8,column=0)
 		fonnnt = Frame(par)
-		Label(fonnnt,text="la etiqueta: ").grid(row=1,column=0)
-		etiqueta = ttk.Combobox(fonnnt)
-		etiqueta["values"] = ["span","b","i","sub","sup","h1","h2","h3","h4","h5","h6"]
-		etiqueta.grid(row=1,column=1)
 		Label(fonnnt,text="tamaño de fuente: ").grid(row=2,column=0)
 		sc = Scale(fonnnt,from_=0,to=300,orient=HORIZONTAL)
 		sc.grid(row=2,column=1,columnspan=2)
-		tipTex = ttk.Combobox(fonnnt)
-		tipTex["values"] = ["px","%"]
-		Label(fonnnt,text="formato de tamaño: ").grid(row=3,column=0)
-		tipTex.grid(row=3,column=1)
 		self.opciones.add(fonnnt, text="fuente y etiqueta", padding=5)
 		grupos = Frame(par)
 		self.opciones.add(grupos, text="grupos", padding=5)
@@ -85,27 +76,22 @@ class editCanva:
 				ip = ""
 			#dire.get()
 			sass = {}
-			if sc.get() > 0:
-				sass["font-size"] = (sc.get() + tipTex.get())
 			sass["color"] = self.textColor[1]
 			if self.backColor[1] != None:
 				if len(self.backColor[1]) > 1:
 					sass["background-color"] = self.backColor[1]
+			if sc.get() > 0:
+				sass["font-size"] = int(sc.get())
 			ts = etree.tostring(scri)
 			ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
 			scri.set("style",cssWrite(sass))
 			os.chdir(xml[0:xml.rfind("/")+1])
-			if len(etiqueta.get()) > 0:
-				scri.tag = etiqueta.get()
 			tg = xml + " "
 			tj = str(etree.tostring(scri))
 			command = "sed -i \'s|"+ts.replace(";","; ")+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
 			os.system(command)
 			print(command)
 			jTT = tj.replace(ts.replace(";","; "),tj[2:tj.find(">")])[2:-1]
-			if len(etiqueta.get()) > 0:
-				command = "sed -i \'s|"+ts[ts.find("</"):-1]+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
-				print(command)
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(jTT))
 			del(tg)
 			del(jTT)
@@ -191,7 +177,6 @@ class inicio:
 					render.grid(row=0,column=1,sticky="we")
 				elif type == ".html":
 					self.root.attributes('-zoomed', True)
-		#			self.cav = Canvas(foor, background="white", width = W / 1.3, height = H / 1.3)
 					self.cav = Frame(foor,bg="white")
 					self.cav.grid(row=0,column=1,sticky="we")
 					i = 0
@@ -215,7 +200,7 @@ class inicio:
 					Button(isHow,text="proyecto", command=isCUI).pack(fill=X)
 		Label(self.root,text="cssUshI por zje 2019").grid(row=29,column=0)
 root = Tk()
-app = inicio("cssUshI", root, ImageTk, Tk)
+app = inicio("cssUshI", root, None, Tk)
 root.mainloop()
 """
 TODO
