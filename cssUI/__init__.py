@@ -53,7 +53,7 @@ class editCanva:
 		grupos = Frame(par)
 		self.opciones.add(grupos, text="grupos", padding=5)
 		def quitCool ():
-			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
+			formaHTML(c, xml)
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
 			scri = etree.fromstring(ip)
 			ts = etree.tostring(scri)
@@ -64,7 +64,7 @@ class editCanva:
 			command = "sed -i \'s|"+ts.replace(";","; ")+"|"+tj[2:tj.find(">")]+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
 			os.chdir(xml[0:xml.rfind("/")+1])
 			os.system(command)
-			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
+			formaHTML(c, xml)
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(tj[2:-1]))
 			preV(None)
 		Button(par,text="color de texto", command=colorPick).grid(row=3,column=0)
@@ -109,7 +109,7 @@ class editCanva:
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(jTT))
 			del(tg)
 			del(jTT)
-			formaHTML(c, xml, int(h / 1.5), int(w / 1.5))
+			formaHTML(c, xml)
 			preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
@@ -154,7 +154,19 @@ class inicio:
 		self.root = master
 		self.root.title(name)
 		meniu = Menu(self.root)
-		
+		self.root.config(menu=meniu)
+		def Open ():
+			self.openendFile = filedialog.askopenfilename(filetypes=(("proyecto cssUshI","*.cui"),("documento HTML", "*.html"),("cualquier tipo","*.*")))
+			editar(self.openendFile)
+		def backUp ():
+			if len(self.openendFile) > 0:
+				oof = self.openendFile + " "
+				comandev = "cp "+oof+" "+os.getcwd()+"/proyectos"+oof[oof.rfind("/"):-1]
+				os.system(comandev)
+		archivo = Menu(meniu)
+		archivo.add_command(label="Abrir", command= Open)
+		archivo.add_command(label="Copiar", command= backUp)
+		meniu.add_cascade(label="Archivo", menu=archivo)
 		try:
 			self.root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file='src/img/logo.png'))
 		except:
@@ -168,14 +180,6 @@ class inicio:
 			self.root.destroy()
 			self.edi.root.destroy()
 		self.root.protocol("WM_DELETE_WINDOW",quif)
-		def Open ():
-			self.openendFile = filedialog.askopenfilename(filetypes=(("proyecto cssUshI","*.cui"),("documento HTML", "*.html"),("cualquier tipo","*.*")))
-			editar(self.openendFile)
-		def backUp ():
-			if len(self.openendFile) > 0:
-				oof = self.openendFile + " "
-				comandev = "cp "+oof+" "+os.getcwd()+"/proyectos"+oof[oof.rfind("/"):-1]
-				os.system(comandev)
 		def editar (data):
 			foor = Frame(self.root, bg="#dbdbdb")
 			foor.grid(row=1,column=0)
@@ -192,7 +196,7 @@ class inicio:
 					self.cav.grid(row=0,column=1,sticky="we")
 					i = 0
 					self.edi = editCanva(self.cav, W, H, data)
-					formaHTML(self.cav, data, int(H / 1.5), int(W / 1.5))
+					formaHTML(self.cav, data)
 				else:
 					isHow = base()
 					isHow.title(" ")
