@@ -40,7 +40,9 @@ class editCanva:
 		Label(fonnnt,text="tamaño de fuente: ").grid(row=2,column=0)
 		Label(fonnnt,text="espacio entre elementos: ").grid(row=3,column=0)
 		sc = Scale(fonnnt,from_=0,to=300,orient=HORIZONTAL)
+		pd = Scale(fonnnt,from_=0,to=50, orient=HORIZONTAL)
 		sc.grid(row=2,column=1,columnspan=2)
+		pd.grid(row=3,column=1,columnspan=2)
 		self.opciones.add(fonnnt, text="fuente y etiqueta", padding=5)
 		grupos = Frame(par)
 		self.opciones.add(grupos, text="grupos", padding=5)
@@ -83,6 +85,8 @@ class editCanva:
 					sass["background-color"] = self.backColor[1]
 			if sc.get() > 0:
 				sass["font-size"] = int(sc.get())
+			if pd.get() > 0:
+				sass["padding"] = int(pd.get())
 			ts = etree.tostring(scri)
 			ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
 			scri.set("style",cssWrite(sass))
