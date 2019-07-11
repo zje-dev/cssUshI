@@ -34,6 +34,8 @@ class text:
 				t.configure(fg=css["color"])
 			if "font-size" in css.keys():
 				self.font_size = css["font-size"]
+			if "padding" in css.keys():
+				t.configure(padx=css["padding"])
 		else:
 			t["bg"] = t.master["bg"]
 			t.configure(fg="black")
