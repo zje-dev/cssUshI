@@ -38,6 +38,7 @@ class editCanva:
 		self.opciones.grid(row=8,column=0)
 		fonnnt = Frame(par)
 		Label(fonnnt,text="tamaño de fuente: ").grid(row=2,column=0)
+		Label(fonnnt,text="espacio entre elementos: ").grid(row=3,column=0)
 		sc = Scale(fonnnt,from_=0,to=300,orient=HORIZONTAL)
 		sc.grid(row=2,column=1,columnspan=2)
 		self.opciones.add(fonnnt, text="fuente y etiqueta", padding=5)
