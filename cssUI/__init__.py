@@ -19,6 +19,7 @@ class editCanva:
 	root = None
 	opciones = None
 	imap = None
+	clazz = [""]
 	def __init__ (self,c, w, h, xml):
 		par = Tk()
 		par.title("editar")
@@ -43,8 +44,17 @@ class editCanva:
 		pd = Scale(fonnnt,from_=0,to=100, orient=HORIZONTAL)
 		sc.grid(row=2,column=1,columnspan=4)
 		pd.grid(row=3,column=1,columnspan=4)
-		self.opciones.add(fonnnt, text="fuente y etiqueta", padding=5)
+		self.opciones.add(fonnnt, text="colores", padding=5)
 		grupos = Frame(par)
+		Label(grupos,text="selecciona el grupo: ").grid(row=0,column=0)
+		cass = ttk.Combobox(grupos)
+		cass["values"] = self.clazz
+		cass.grid(row=0,column=1)
+		classNameTF = Entry(grupos)
+		classNameTF.grid(row=1,column=1)
+		Label(grupos,text="nombre del nuevo grupo: ").grid(row=1,column=0)
+		def addVue ():
+			self.clazz.append()
 		self.opciones.add(grupos, text="grupos", padding=5)
 		def quitCool ():
 			formaHTML(c, xml)
