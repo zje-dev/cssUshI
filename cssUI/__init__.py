@@ -1,14 +1,12 @@
 from tkinter import *
 import tkinter
 from tkinter import ttk
-import json
+from tkinter import messagebox
 import os, sys
 from lxml import etree
 from io import StringIO, BytesIO
 from tkinter import filedialog
 from tkinter.colorchooser import *
-from json import *
-from PIL import *
 from src.lib.ttkHTML import formaHTML
 from src.lib.formaHtml import cssRead
 from src.lib.formaHtml import cssWrite
@@ -53,8 +51,15 @@ class editCanva:
 		classNameTF = Entry(grupos)
 		classNameTF.grid(row=1,column=1)
 		Label(grupos,text="nombre del nuevo grupo: ").grid(row=1,column=0)
+		Button(grupos,text="quitar grupo",activebackground="#a60000",bg="red").grid(row=3,column=0,columnspan=2)
 		def addVue ():
-			self.clazz.append()
+			if len(classNameTF.get()) > 0:
+				self.clazz.append(classNameTF.get())
+				cass["values"] = self.clazz
+				cass.current(len(self.clazz) - 1)
+			else:
+				messagebox.showerror("Error", "Error el grupo no tiene nombre")
+		Button(grupos,text="agregar grupo",command=addVue).grid(row=2,column=0,columnspan=2)
 		self.opciones.add(grupos, text="grupos", padding=5)
 		def quitCool ():
 			formaHTML(c, xml)

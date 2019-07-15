@@ -1,10 +1,8 @@
 deb pack's
     -python3
-    -pip
 modules installed
     -tkinter
     -lxml
     -io
     -PIL
 https://steamcommunity.com/profiles/76561198972644663
-hispamemes@gmail.comip
