@@ -14,9 +14,13 @@ class div:
 		self.DOMelement = elem
 		element = etree.fromstring(elem)
 		self.TKelement = Frame(parent)
-		self.TKelement.grid(row=xp,column=yp)
+		global xp, yp
+		self.TKelement.grid(row=yp,column=xp)
 		if "style" in element.attrib:
 			css = cssRead(element.get("style"))
+		else:
+		for QEdoom in element:
+			parOne(self.TKelement,etree.tostring(QEdoom))
 class text:
 	font_size = 11
 	font_family = "Helvetica"
@@ -81,4 +85,5 @@ def parOne (parent,data):
 			xp = 0
 			yp += 1
 		elif ele.tag =="div":
-			ele = div(etree.tostring(ele),parent)
+			div(etree.tostring(ele),parent)
+			yp += 1
