@@ -222,7 +222,3 @@ class inicio:
 root = Tk()
 app = inicio("cssUshI", root, None, Tk)
 root.mainloop()
-"""
-TODO
--mejorar el sistema HTML render
-"""

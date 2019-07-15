@@ -18,7 +18,10 @@ class div:
 		self.TKelement.grid(row=yp,column=xp)
 		if "style" in element.attrib:
 			css = cssRead(element.get("style"))
+			if "background-color" in css.keys():
+				self.TKelement["bg"] = css["background-color"]
 		else:
+			self.TKelement["bg"] = self.TKelement.master["bg"]
 		for QEdoom in element:
 			parOne(self.TKelement,etree.tostring(QEdoom))
 class text:
