@@ -10,12 +10,15 @@ textTag = ["b","i","sup","sub","span","h1","h2","h3","h4","h5","h6"]
 class div:
 	DOMelement = ""
 	TKelement = None
-	def __init__(self,elem,parent):
+	def __init__(self,elem,parent,iam):
 		self.DOMelement = elem
 		element = etree.fromstring(elem)
 		self.TKelement = Frame(parent)
 		global xp, yp
-		self.TKelement.grid(row=yp,column=xp)
+		if iam == "div":
+			self.TKelement.grid(row=yp,column=xp,sticky=N+W)
+		elif iam == "center":
+			self.TKelement.grid(row=yp,column=xp,sticky=N)
 		if "style" in element.attrib:
 			css = cssRead(element.get("style"))
 			if "background-color" in css.keys():
@@ -79,7 +82,7 @@ def parOne (parent,data):
 		ele = etree.fromstring(data)
 		global xp, yp
 		if ele.tag in textTag:
-			text(etree.tostring(ele), parent)
+			text(etree.tostring(ele),parent)
 			xp += 1
 			if ele.tag in ["h1","h2","h3","h4","h5","h6"]:
 				xp = 0
@@ -87,6 +90,6 @@ def parOne (parent,data):
 		elif ele.tag == "br":
 			xp = 0
 			yp += 1
-		elif ele.tag =="div":
-			div(etree.tostring(ele),parent)
+		elif ele.tag == "div" or ele.tag == "center":
+			div(etree.tostring(ele),parent,ele.tag)
 			yp += 1
