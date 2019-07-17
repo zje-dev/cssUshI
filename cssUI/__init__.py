@@ -61,20 +61,21 @@ class editCanva:
 				messagebox.showerror("Error", "Error el grupo no tiene nombre")
 		def adGrup ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
-			print(ip)
+			PTFD = etree.fromstring(ip)
+			print(PTFD)
 		Button(grupos,text="agregar grupo",command=addVue).grid(row=2,column=0,columnspan=2)
 		self.opciones.add(grupos, text="grupos", padding=5)
 		Button(grupos, text="añadir elemento al grupo",command=adGrup).grid(row=4,column=0,columnspan=2)
 		def quitCool ():
 			formaHTML(c, xml)
-			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
 			scri = etree.fromstring(ip)
 			ts = etree.tostring(scri)
-			ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
+			ts = str(ts)[2:str(ts).find(">")]
 			if "style" in scri.attrib:
 				del(scri.attrib["style"])
 			tj = str(etree.tostring(scri))
-			command = "sed -i \'s|"+ts.replace(";","; ")+"|"+tj[2:tj.find(">")]+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
+			command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
 			os.chdir(xml[0:xml.rfind("/")+1])
 			os.system(command)
 			formaHTML(c, xml)
@@ -90,35 +91,38 @@ class editCanva:
 		tree = etree.parse(StringIO(f), parser).getroot()
 		fz = Scale(par,from_=0,to=400, orient=HORIZONTAL)
 		def checkD ():
-			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
-			scri = etree.fromstring(ip)
-			if "style" in scri.attrib:
-				ip = scri.get("style")
-			else:
-				ip = ""
-			#dire.get()
-			sass = {}
-			sass["color"] = self.textColor[1]
-			if self.backColor[1] != None:
-				if len(self.backColor[1]) > 1:
-					sass["background-color"] = self.backColor[1]
-			if sc.get() > 0:
-				sass["font-size"] = int(sc.get())
-			if pd.get() > 0:
-				sass["padding"] = int(pd.get())
-			ts = etree.tostring(scri)
-			ts = str(ts)[2:str(ts).find(">")].replace(":", ": ")
-			scri.set("style",cssWrite(sass))
-			os.chdir(xml[0:xml.rfind("/")+1])
-			tg = xml + " "
-			tj = str(etree.tostring(scri))
-			command = "sed -i \'s|"+ts.replace(";","; ")+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
-			os.system(command)
-			print(command)
-			jTT = tj.replace(ts.replace(";","; "),tj[2:tj.find(">")])[2:-1]
-			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(jTT))
-			del(tg)
-			del(jTT)
+			try:
+				ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+				scri = etree.fromstring(ip)
+				if "style" in scri.attrib:
+					ip = scri.get("style")
+				else:
+					ip = ""
+				#dire.get()
+				sass = {}
+				sass["color"] = self.textColor[1]
+				if self.backColor[1] != None:
+					if len(self.backColor[1]) > 1:
+						sass["background-color"] = self.backColor[1]
+				if sc.get() > 0:
+					sass["font-size"] = int(sc.get())
+				if pd.get() > 0:
+					sass["padding"] = int(pd.get())
+				ts = etree.tostring(scri)
+				ts = str(ts)[2:str(ts).find(">")]
+				scri.set("style",cssWrite(sass))
+				os.chdir(xml[0:xml.rfind("/")+1])
+				tg = xml + " "
+				tj = str(etree.tostring(scri))
+				command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+				os.system(command)
+				print(command)
+				jTT = tj.replace(ts,tj[2:tj.find(">")])[2:-1]
+				xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(jTT))
+				del(tg)
+				del(jTT)
+			except:
+				pass
 			formaHTML(c, xml)
 			preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
@@ -134,11 +138,18 @@ class editCanva:
 				self.imap.destroy()
 				self.imap = Frame(par)
 				self.imap.grid(row=6,column=1)
-			selected = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
+			selected = "".join(xmlTree.item(xmlTree.focus())["values"])
 			parOne(self.imap,selected)
 		xmlTree.bind("<ButtonPress-1>", preV)
 		xmlTree.grid(row=0,column=0)
 		hd = xmlTree.insert("", END, text="HTML", values=(str(etree.tostring(tree[1]))[2:-1]))
+		def tf (element,xt,pr):
+				rl = etree.tostring(element).decode()
+				ei = xt.insert(pr, END, text=element.tag, values=tuple([rl]))
+				for subEle in element:
+					tf(subEle,xt,ei)
+		tf(tree[1],xmlTree,hd)
+		"""
 		for ele in tree[1]:
 			if ele.tag != "br":
 				rl = etree.tostring(ele).decode()
@@ -148,6 +159,7 @@ class editCanva:
 						if subele.tag != "br":
 							rl = etree.tostring(subele).decode()
 							eR = xmlTree.insert(ei, END, text=subele.tag, values=tuple([rl]))
+		"""
 		self.root = par
 class inicio:
 	editor = None
@@ -197,7 +209,8 @@ class inicio:
 			foor.grid(row=1,column=0)
 			if not data == 0:
 				data = data + " "
-				tyfe = data[data.rfind('.'): -1]
+				tyfe = data[data.rfind('.')
+				-1]
 				if tyfe == ".cui":
 					render = Canvas(foor, background="white")
 					render.grid(row=0,column=1,sticky="we")
