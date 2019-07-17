@@ -1,4 +1,4 @@
-from tkinter import *
+﻿from tkinter import *
 import tkinter
 from tkinter import ttk
 from tkinter import messagebox
@@ -59,8 +59,12 @@ class editCanva:
 				cass.current(len(self.clazz) - 1)
 			else:
 				messagebox.showerror("Error", "Error el grupo no tiene nombre")
+		def adGrup ():
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			print(ip)
 		Button(grupos,text="agregar grupo",command=addVue).grid(row=2,column=0,columnspan=2)
 		self.opciones.add(grupos, text="grupos", padding=5)
+		Button(grupos, text="añadir elemento al grupo",command=adGrup).grid(row=4,column=0,columnspan=2)
 		def quitCool ():
 			formaHTML(c, xml)
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("style"," style")
@@ -134,14 +138,16 @@ class editCanva:
 			parOne(self.imap,selected)
 		xmlTree.bind("<ButtonPress-1>", preV)
 		xmlTree.grid(row=0,column=0)
-		hd = xmlTree.insert("", END, text="HTML", values=(etree.tostring(tree[1]).decode()))
+		hd = xmlTree.insert("", END, text="HTML", values=(str(etree.tostring(tree[1]))[2:-1]))
 		for ele in tree[1]:
-			rl = etree.tostring(ele).decode()
-			ei = xmlTree.insert(hd, END, text=ele.tag, values=(rl))
-			if ele.tag == "div":
-				for subele in ele:
-					rl = etree.tostring(subele)
-					ei = xmlTree.insert(hd, END, text=subele.tag, values=(rl))
+			if ele.tag != "br":
+				rl = etree.tostring(ele).decode()
+				ei = xmlTree.insert(hd, END, text=ele.tag, values=tuple([rl]))
+				if ele.tag == "div" or ele.tag == "center":
+					for subele in ele:
+						if subele.tag != "br":
+							rl = etree.tostring(subele).decode()
+							eR = xmlTree.insert(ei, END, text=subele.tag, values=tuple([rl]))
 		self.root = par
 class inicio:
 	editor = None

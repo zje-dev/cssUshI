@@ -4,5 +4,3 @@ modules installed
     -tkinter
     -lxml
     -io
-    -PIL
-https://steamcommunity.com/profiles/76561198972644663
