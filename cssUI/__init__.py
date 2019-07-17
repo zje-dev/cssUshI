@@ -61,6 +61,7 @@ class editCanva:
 				messagebox.showerror("Error", "Error el grupo no tiene nombre")
 		def adGrup ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			print(ip)
 			PTFD = etree.fromstring(ip)
 			print(PTFD)
 		Button(grupos,text="agregar grupo",command=addVue).grid(row=2,column=0,columnspan=2)
@@ -69,6 +70,7 @@ class editCanva:
 		def quitCool ():
 			formaHTML(c, xml)
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			print(ip)
 			scri = etree.fromstring(ip)
 			ts = etree.tostring(scri)
 			ts = str(ts)[2:str(ts).find(">")]
@@ -91,38 +93,36 @@ class editCanva:
 		tree = etree.parse(StringIO(f), parser).getroot()
 		fz = Scale(par,from_=0,to=400, orient=HORIZONTAL)
 		def checkD ():
-			try:
-				ip = "".join(xmlTree.item(xmlTree.focus())["values"])
-				scri = etree.fromstring(ip)
-				if "style" in scri.attrib:
-					ip = scri.get("style")
-				else:
-					ip = ""
-				#dire.get()
-				sass = {}
-				sass["color"] = self.textColor[1]
-				if self.backColor[1] != None:
-					if len(self.backColor[1]) > 1:
-						sass["background-color"] = self.backColor[1]
-				if sc.get() > 0:
-					sass["font-size"] = int(sc.get())
-				if pd.get() > 0:
-					sass["padding"] = int(pd.get())
-				ts = etree.tostring(scri)
-				ts = str(ts)[2:str(ts).find(">")]
-				scri.set("style",cssWrite(sass))
-				os.chdir(xml[0:xml.rfind("/")+1])
-				tg = xml + " "
-				tj = str(etree.tostring(scri))
-				command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
-				os.system(command)
-				print(command)
-				jTT = tj.replace(ts,tj[2:tj.find(">")])[2:-1]
-				xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(jTT))
-				del(tg)
-				del(jTT)
-			except:
-				pass
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			print(ip)
+			scri = etree.fromstring(ip)
+			if "style" in scri.attrib:
+				ip = scri.get("style")
+			else:
+				ip = ""
+			#dire.get()
+			sass = {}
+			sass["color"] = self.textColor[1]
+			if self.backColor[1] != None:
+				if len(self.backColor[1]) > 1:
+					sass["background-color"] = self.backColor[1]
+			if sc.get() > 0:
+				sass["font-size"] = int(sc.get())
+			if pd.get() > 0:
+				sass["padding"] = int(pd.get())
+			ts = etree.tostring(scri)
+			ts = str(ts)[2:str(ts).find(">")]
+			scri.set("style",cssWrite(sass))
+			os.chdir(xml[0:xml.rfind("/")+1])
+			tg = xml + " "
+			tj = str(etree.tostring(scri))
+			command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+			os.system(command)
+			print(command)
+			jTT = tj.replace(ts,tj[2:tj.find(">")])[2:-1]
+			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([jTT]))
+			del(tg)
+			del(jTT)
 			formaHTML(c, xml)
 			preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
