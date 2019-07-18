@@ -88,21 +88,18 @@ class editCanva:
 		self.opciones.add(grupos, text="grupos", padding=5)
 		Button(grupos, text="añadir elemento al grupo",command=adGrup).grid(row=4,column=0,columnspan=2)
 		def quitCool ():
-			formaHTML(c, xml)
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
-			print(ip)
-			scri = etree.fromstring(ip)
-			ts = etree.tostring(scri)
-			ts = str(ts)[2:str(ts).find(">") + 1]
-			if "style" in scri.attrib:
-				del(scri.attrib["style"])
-			tj = str(etree.tostring(scri))
-			command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">") + 1]+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
-			os.chdir(xml[0:xml.rfind("/")+1])
-			os.system(command)
+			if "style" in ip[0:ip.find(">") + 1]:
+				ss = etree.fromstring(ip)
+				reovevoer = 'style="'+ss.get("style")+'"'
+				ih = ip.replace(reovevoer,'') 
+				command = "sed -i \'s|"+ip+"|"+ih+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
+				print(command)
+				os.chdir(xml[0:xml.rfind("/")+1])
+				os.system(command)
+			else:
+				messagebox.showerror("Error", "Error el elemento no tiene ningun estilo")
 			formaHTML(c, xml)
-			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=(tj[2:-1]))
-			preV(None)
 		Button(fonnnt,text="color de texto", command=colorPick).grid(row=11,column=0)
 		Button(fonnnt,text="color de fondo", command=bolorPick).grid(row=10,column=0)
 		Button(fonnnt,text="limpiar color", command=bolorPickt).grid(row=11,column=1)
