@@ -51,7 +51,11 @@ class editCanva:
 		classNameTF = Entry(grupos)
 		classNameTF.grid(row=1,column=1)
 		Label(grupos,text="nombre del nuevo grupo: ").grid(row=1,column=0)
-		Button(grupos,text="quitar grupo",activebackground="#a60000",bg="red").grid(row=3,column=0,columnspan=2)
+		def quiVue ():
+			self.clazz.remove(cass.get())
+			cass["values"] = self.clazz
+			cass.current(0)
+		Button(grupos,text="quitar grupo",activebackground="#a60000",bg="red",command=quiVue).grid(row=3,column=0,columnspan=2)
 		def addVue ():
 			if len(classNameTF.get()) > 0:
 				self.clazz.append(classNameTF.get())
@@ -61,10 +65,26 @@ class editCanva:
 				messagebox.showerror("Error", "Error el grupo no tiene nombre")
 		def adGrup ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
-			print(ip)
 			PTFD = etree.fromstring(ip)
-			print(PTFD)
+			PTFD.set("class",cass.get())
+			pi = etree.tostring(PTFD).decode()
+			os.chdir(xml[0:xml.rfind("/")+1])
+			command = "sed -i \'s|"+ip+"|"+pi+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
+			print(command)
+			os.system(command)
 		Button(grupos,text="agregar grupo",command=addVue).grid(row=2,column=0,columnspan=2)
+		def sacarDelGrupo ():
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			if "class" in ip[0:ip.find(">") + 1]:
+				ss = etree.fromstring(ip)
+				reovevoer = 'class="'+ss.get("class")+'"'
+				ih = ip.replace(reovevoer,'') 
+				command = "sed -i \'s|"+ip+"|"+ih+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
+				os.chdir(xml[0:xml.rfind("/")+1])
+				os.system(command)
+			else:
+				messagebox.showerror("Error", "Error el elemento no es de ningun grupo")
+		Button(grupos,text="quitar del grupo",activebackground="#a60000",bg="red",command=sacarDelGrupo).grid(row=5,column=0,columnspan=2)
 		self.opciones.add(grupos, text="grupos", padding=5)
 		Button(grupos, text="añadir elemento al grupo",command=adGrup).grid(row=4,column=0,columnspan=2)
 		def quitCool ():
@@ -73,11 +93,11 @@ class editCanva:
 			print(ip)
 			scri = etree.fromstring(ip)
 			ts = etree.tostring(scri)
-			ts = str(ts)[2:str(ts).find(">")]
+			ts = str(ts)[2:str(ts).find(">") + 1]
 			if "style" in scri.attrib:
 				del(scri.attrib["style"])
 			tj = str(etree.tostring(scri))
-			command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
+			command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">") + 1]+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
 			os.chdir(xml[0:xml.rfind("/")+1])
 			os.system(command)
 			formaHTML(c, xml)
@@ -111,12 +131,13 @@ class editCanva:
 			if pd.get() > 0:
 				sass["padding"] = int(pd.get())
 			ts = etree.tostring(scri)
-			ts = str(ts)[2:str(ts).find(">")]
+			ts = str(ts)[2:str(ts).find(">") + 1]
 			scri.set("style",cssWrite(sass))
 			os.chdir(xml[0:xml.rfind("/")+1])
 			tg = xml + " "
 			tj = str(etree.tostring(scri))
-			command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">")]+"|g\' "+tg[xml.rfind("/")+1:-1]
+			command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">") + 1]+"|g\' "+tg[xml.rfind("/")+1:-1]
+			print(command)
 			os.system(command)
 			print(command)
 			jTT = tj.replace(ts,tj[2:tj.find(">")])[2:-1]
@@ -149,17 +170,6 @@ class editCanva:
 				for subEle in element:
 					tf(subEle,xt,ei)
 		tf(tree[1],xmlTree,hd)
-		"""
-		for ele in tree[1]:
-			if ele.tag != "br":
-				rl = etree.tostring(ele).decode()
-				ei = xmlTree.insert(hd, END, text=ele.tag, values=tuple([rl]))
-				if ele.tag == "div" or ele.tag == "center":
-					for subele in ele:
-						if subele.tag != "br":
-							rl = etree.tostring(subele).decode()
-							eR = xmlTree.insert(ei, END, text=subele.tag, values=tuple([rl]))
-		"""
 		self.root = par
 class inicio:
 	editor = None
@@ -180,7 +190,7 @@ class inicio:
 		meniu = Menu(self.root)
 		self.root.config(menu=meniu)
 		def Open ():
-			self.openendFile = filedialog.askopenfilename(filetypes=(("proyecto cssUshI","*.cui"),("documento HTML", "*.html"),("cualquier tipo","*.*")))
+			self.openendFile = filedialog.askopenfilename(filetypes=(("documento HTML", "*.html"),("cualquier tipo","*.*")))
 			editar(self.openendFile)
 		def backUp ():
 			if len(self.openendFile) > 0:
@@ -192,7 +202,7 @@ class inicio:
 		archivo.add_command(label="Copiar", command= backUp)
 		meniu.add_cascade(label="Archivo", menu=archivo)
 		try:
-			self.root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file='src/img/logo.png'))
+			self.root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file='src/logo.png'))
 		except:
 			pass
 		self.root.configure(background="#a8a8a8")
@@ -209,34 +219,13 @@ class inicio:
 			foor.grid(row=1,column=0)
 			if not data == 0:
 				data = data + " "
-				tyfe = data[data.rfind('.')
-				-1]
-				if tyfe == ".cui":
-					render = Canvas(foor, background="white")
-					render.grid(row=0,column=1,sticky="we")
-				elif type == ".html":
-					self.root.attributes('-zoomed', True)
-					self.cav = Frame(foor,bg="white")
-					self.cav.grid(row=0,column=1,sticky="we")
-					i = 0
-					self.edi = editCanva(self.cav, W, H, data)
-					formaHTML(self.cav, data)
-				else:
-					isHow = base()
-					isHow.title(" ")
-					Label(isHow,text="que tipo de archivo representa?").pack()
-					def isHTML ():
-						self.root.attributes('-zoomed', True)
-						self.cav = Canvas(foor, background="white", width = W / 1.3, height = H / 1.3)
-						self.cav.grid(row=0,column=1,sticky="we")
-						isHow.destroy()
-						i = 0
-						self.edi = editCanva(self.cav, W, H, data)
-						formaHTML(self.cav, data)
-					def isCUI ():
-						isHow.destroy()
-					Button(isHow,text="HTML", command=isHTML).pack(fill=X)
-					Button(isHow,text="proyecto", command=isCUI).pack(fill=X)
+				tyfe = data[data.rfind('.')-1]
+				self.root.attributes('-zoomed', True)
+				self.cav = Frame(foor,bg="white")
+				self.cav.grid(row=0,column=1,sticky="we")
+				i = 0
+				self.edi = editCanva(self.cav, W, H, data)
+				formaHTML(self.cav, data)
 		Label(self.root,text="cssUshI por zje 2019").grid(row=29,column=0)
 root = Tk()
 app = inicio("cssUshI", root, None, Tk)
