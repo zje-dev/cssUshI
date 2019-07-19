@@ -1,8 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=cssUshi
-Terminal=false
-Exec=python3 /home/zje/Escritorio/python/cssUI/__init__.py
-Icon=python3 /home/zje/Escritorio/python/cssUI/__init__.py
-Path=/home/zje/Escritorio/python/cssUI
