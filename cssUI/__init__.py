@@ -40,8 +40,16 @@ class editCanva:
 		Label(fonnnt,text="espacio entre elementos: ").grid(row=3,column=0)
 		sc = Scale(fonnnt,from_=0,to=300,orient=HORIZONTAL)
 		pd = Scale(fonnnt,from_=0,to=100, orient=HORIZONTAL)
-		sc.grid(row=2,column=1,columnspan=4)
-		pd.grid(row=3,column=1,columnspan=4)
+		def SSdefault ():
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			css = etree.fromstring(ip).tag
+			if css == "span" or css=="sub" or css=="sup" or css=="a" or css== "i":
+				sc.set(11)
+			elif css == "h1" or css == "h2" or css == "h3" or css == "h4" or css == "h5" or css == "h6":
+				sc.set(18 - int(int(css[1]) * 2))
+		Button(fonnnt,text="tamaño original",command=SSdefault).grid(row=2,column=6)
+		sc.grid(row=2,column=1,columnspan=5)
+		pd.grid(row=3,column=1,columnspan=5)
 		self.opciones.add(fonnnt, text="colores", padding=5)
 		grupos = Frame(par)
 		Label(grupos,text="selecciona el grupo: ").grid(row=0,column=0)
@@ -130,24 +138,22 @@ class editCanva:
 					sass["background-color"] = self.backColor[1]
 			if sc.get() > 0:
 				sass["font-size"] = int(sc.get())
-			if pd.get() > 0:
-				sass["padding"] = int(pd.get())
-			ts = etree.tostring(scri)
-			ts = str(ts)[2:str(ts).find(">") + 1]
+			sass["padding"] = int(pd.get())
+			ts = etree.tostring(scri).decode()
 			scri.set("style",cssWrite(sass))
 			os.chdir(xml[0:xml.rfind("/")+1])
 			tg = xml + " "
-			tj = str(etree.tostring(scri))
-			command = "sed -i \'s|"+ts+"|"+tj[2:tj.find(">") + 1]+"|g\' "+tg[xml.rfind("/")+1:-1]
+			tj = etree.tostring(scri)
+			command = "sed -i \'s|"+str(repr(ts)[1:-1])+"|"+tj+"|g\' "+tg[xml.rfind("/")+1:-1]
 			print(command)
-			os.system(command)
-			print(command)
-			jTT = tj.replace(ts,tj[2:tj.find(">")])[2:-1]
-			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([jTT]))
-			del(tg)
-			del(jTT)
-			formaHTML(c, xml)
-			preV(None)
+		#	os.system(command)
+		#	print(command)
+		#	jTT = tj.replace(ts,tj[2:tj.find(">")])[2:-1]
+		#	xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([jTT]))
+		#	del(tg)
+		#	del(jTT)
+		#	formaHTML(c, xml)
+		#	preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
 		tre = Frame(par, background="black")
