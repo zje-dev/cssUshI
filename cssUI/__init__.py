@@ -124,7 +124,6 @@ class editCanva:
 		fz = Scale(par,from_=0,to=400, orient=HORIZONTAL)
 		def checkD ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
-			print(ip)
 			scri = etree.fromstring(ip)
 			if "style" in scri.attrib:
 				ip = scri.get("style")
@@ -143,9 +142,10 @@ class editCanva:
 			scri.set("style",cssWrite(sass))
 			os.chdir(xml[0:xml.rfind("/")+1])
 			tg = xml + " "
-			tj = etree.tostring(scri)
-			command = "sed -i \'s|"+str(repr(ts)[1:-1])+"|"+tj+"|g\' "+tg[xml.rfind("/")+1:-1]
-			print(command)
+			tj = etree.tostring(scri).decode().replace('\t','\\t').replace('\n','\\n').replace('\"','\\\"')
+			print(tj)
+		#	command = "sed -i \'s|"+str(repr(ts)[1:-1])+"|"+tj+"|g\' "+tg[xml.rfind("/")+1:-1]
+		#	print(command)
 		#	os.system(command)
 		#	print(command)
 		#	jTT = tj.replace(ts,tj[2:tj.find(">")])[2:-1]
