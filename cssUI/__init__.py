@@ -68,18 +68,22 @@ class editCanva:
 			PTFD = etree.fromstring(ip)
 			PTFD.set("class",cass.get())
 			pi = etree.tostring(PTFD).decode()
+			ip = ip[0:ip.rfind('>')-1]
 			os.chdir(xml[0:xml.rfind("/")+1])
-			command = "sed -i \'s|"+ip+"|"+pi+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
+			print(repr(ip))
+			command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+pi.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
 			print(command)
 			os.system(command)
+			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([pi]))
 		Button(grupos,text="agregar grupo",command=addVue).grid(row=2,column=0,columnspan=2)
 		def sacarDelGrupo ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
 			if "class" in ip[0:ip.find(">") + 1]:
 				ss = etree.fromstring(ip)
-				reovevoer = 'class="'+ss.get("class")+'"'
+				ip = ip[0:ip.rfind('>')]
+				reovevoer = ' class="'+ss.get("class")+'"'
 				ih = ip.replace(reovevoer,'') 
-				command = "sed -i \'s|"+ip+"|"+ih+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
+				command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+ih.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
 				os.chdir(xml[0:xml.rfind("/")+1])
 				os.system(command)
 			else:
@@ -91,9 +95,10 @@ class editCanva:
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
 			if "style" in ip[0:ip.find(">") + 1]:
 				ss = etree.fromstring(ip)
-				reovevoer = 'style="'+ss.get("style")+'"'
+				ip = ip[0:ip.rfind('>')]
+				reovevoer = ' style="'+ss.get("style")+'"'
 				ih = ip.replace(reovevoer,'') 
-				command = "sed -i \'s|"+ip+"|"+ih+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
+				command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+ih.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
 				print(command)
 				os.chdir(xml[0:xml.rfind("/")+1])
 				os.system(command)
