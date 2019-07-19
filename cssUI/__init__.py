@@ -160,7 +160,7 @@ class editCanva:
 			parOne(self.imap,selected)
 		xmlTree.bind("<ButtonPress-1>", preV)
 		xmlTree.grid(row=0,column=0)
-		hd = xmlTree.insert("", END, text="HTML", values=(str(etree.tostring(tree[1]))[2:-1]))
+		hd = xmlTree.insert("", END, text="HTML", values=tuple([etree.tostring(tree[1])]))
 		def tf (element,xt,pr):
 				rl = etree.tostring(element).decode()
 				ei = xt.insert(pr, END, text=element.tag, values=tuple([rl]))

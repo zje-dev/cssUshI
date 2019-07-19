@@ -23,6 +23,10 @@ class div:
 			css = cssRead(element.get("style"))
 			if "background-color" in css.keys():
 				self.TKelement["bg"] = css["background-color"]
+			else:
+				self.TKelement["bg"] = self.TKelement.master["bg"]
+			if "padding" in css.keys():
+				self.TKelement.configure(padx=css["padding"],pady=css["padding"])
 		else:
 			self.TKelement["bg"] = self.TKelement.master["bg"]
 		for QEdoom in element:
@@ -55,7 +59,7 @@ class text:
 			if "font-size" in css.keys():
 				self.font_size = css["font-size"]
 			if "padding" in css.keys():
-				t.configure(padx=css["padding"])
+				t.configure(padx=css["padding"],pady=css["padding"])
 		else:
 			t["bg"] = t.master["bg"]
 			t.configure(fg="black")
