@@ -143,17 +143,12 @@ class editCanva:
 			os.chdir(xml[0:xml.rfind("/")+1])
 			tg = xml + " "
 			tj = etree.tostring(scri).decode().replace('\t','\\t').replace('\n','\\n').replace('\"','\\\"')
-			print(tj)
-		#	command = "sed -i \'s|"+str(repr(ts)[1:-1])+"|"+tj+"|g\' "+tg[xml.rfind("/")+1:-1]
-		#	print(command)
-		#	os.system(command)
-		#	print(command)
-		#	jTT = tj.replace(ts,tj[2:tj.find(">")])[2:-1]
-		#	xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([jTT]))
-		#	del(tg)
-		#	del(jTT)
-		#	formaHTML(c, xml)
-		#	preV(None)
+			ts = ts.replace('\t','\\t').replace('\n','\\n').replace('\"','\\\"')
+			command = "sed -i \'s|"+ts+"|"+tj+"|g\'"+tg[xml.rfind("/")+1:-1]
+			os.system(command)
+			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([etree.tostring(scri).decode()]))
+			formaHTML(c, xml)
+			preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
 		tre = Frame(par, background="black")
