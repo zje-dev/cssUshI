@@ -68,7 +68,7 @@ class editCanva:
 			PTFD = etree.fromstring(ip)
 			PTFD.set("class",cass.get())
 			pi = etree.tostring(PTFD).decode()
-			ip = ip[0:ip.rfind('>')-1]
+			ip = ip[0:ip.rfind('>')]
 			os.chdir(xml[0:xml.rfind("/")+1])
 			print(repr(ip))
 			command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+pi.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
