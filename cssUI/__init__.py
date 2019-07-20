@@ -142,10 +142,14 @@ class editCanva:
 			scri.set("style",cssWrite(sass))
 			os.chdir(xml[0:xml.rfind("/")+1])
 			tg = xml + " "
-			tj = etree.tostring(scri).decode().replace('\t','\\t').replace('\n','\\n').replace('\"','\\\"')
-			ts = ts.replace('\t','\\t').replace('\n','\\n').replace('\"','\\\"')
-			command = "sed -i \'s|"+ts+"|"+tj+"|g\'"+tg[xml.rfind("/")+1:-1]
-			os.system(command)
+			tj = etree.tostring(scri).decode()
+			print(ts)
+			ts.replace("<br/>","<br>")
+			print("\n")
+			print(tj)
+			tj.replace("<br/>","<br>")
+			CFD = open(tg[xml.rfind("/")+1:-2],"r").read()
+			CF = open(tg[xml.rfind("/")+1:-2],"w").write(CFD.replace(ts,tj))
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([etree.tostring(scri).decode()]))
 			formaHTML(c, xml)
 			preV(None)
