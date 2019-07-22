@@ -123,7 +123,10 @@ class editCanva:
 		tree = etree.parse(StringIO(f), parser).getroot()
 		fz = Scale(par,from_=0,to=400, orient=HORIZONTAL)
 		def checkD ():
-			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("\\n","\n").replace("\\t","\t").replace("<br/>","<br>")
+			print(ip)
+			if ip[0:2] == "b'":
+				ip = ip [2:-1]
 			scri = etree.fromstring(ip)
 			if "style" in scri.attrib:
 				ip = scri.get("style")
@@ -143,10 +146,7 @@ class editCanva:
 			os.chdir(xml[0:xml.rfind("/")+1])
 			tg = xml + " "
 			tj = etree.tostring(scri).decode()
-			print(ts)
 			ts.replace("<br/>","<br>")
-			print("\n")
-			print(tj)
 			tj.replace("<br/>","<br>")
 			CFD = open(tg[xml.rfind("/")+1:-2],"r").read()
 			CF = open(tg[xml.rfind("/")+1:-2],"w").write(CFD.replace(ts,tj))
@@ -170,10 +170,10 @@ class editCanva:
 			parOne(self.imap,selected)
 		xmlTree.bind("<ButtonPress-1>", preV)
 		xmlTree.grid(row=0,column=0)
-		hd = xmlTree.insert("", END, text="HTML", values=tuple([etree.tostring(tree[1])]))
+		hd = xmlTree.insert("", END, text="HTML", values=tuple([etree.tostring(tree[1])]), open=True)
 		def tf (element,xt,pr):
 				rl = etree.tostring(element).decode()
-				ei = xt.insert(pr, END, text=element.tag, values=tuple([rl]))
+				ei = xt.insert(pr, END, text=element.tag, values=tuple([rl]), open=True)
 				for subEle in element:
 					tf(subEle,xt,ei)
 		tf(tree[1],xmlTree,hd)
