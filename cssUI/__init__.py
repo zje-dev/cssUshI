@@ -122,6 +122,12 @@ class editCanva:
 		parser = etree.HTMLParser()
 		tree = etree.parse(StringIO(f), parser).getroot()
 		fz = Scale(par,from_=0,to=400, orient=HORIZONTAL)
+		def upTree (TI):
+			try: 
+				tifd = xmlTree.item(xmlTree.parent(TI))["values"][0]
+				print(tifd)
+				upTree(xmlTree.parent(TI))
+			except: pass
 		def checkD ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("\\n","\n").replace("\\t","\t").replace("<br/>","<br>")
 			print(ip)
@@ -151,6 +157,7 @@ class editCanva:
 			CFD = open(tg[xml.rfind("/")+1:-2],"r").read()
 			CF = open(tg[xml.rfind("/")+1:-2],"w").write(CFD.replace(ts,tj))
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([etree.tostring(scri).decode()]))
+			upTree(xmlTree.focus())
 			formaHTML(c, xml)
 			preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
