@@ -44,7 +44,7 @@ class editCanva:
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
 			css = etree.fromstring(ip).tag
 			if css == "span" or css=="sub" or css=="sup" or css=="a" or css== "i":
-				sc.set(11)
+				sc.set(14)
 			elif css == "h1" or css == "h2" or css == "h3" or css == "h4" or css == "h5" or css == "h6":
 				sc.set(18 - int(int(css[1]) * 2))
 		Button(fonnnt,text="tamaño original",command=SSdefault).grid(row=2,column=6)
@@ -129,7 +129,6 @@ class editCanva:
 			tf(tree[1],xmlTree,hd)
 		def checkD ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("\\n","\n").replace("\\t","\t").replace("<br/>","<br>")
-			print(ip)
 			if ip[0:2] == "b'":
 				ip = ip [2:-1]
 			scri = etree.fromstring(ip)
