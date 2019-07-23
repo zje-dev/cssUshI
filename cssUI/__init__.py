@@ -78,9 +78,7 @@ class editCanva:
 			pi = etree.tostring(PTFD).decode()
 			ip = ip[0:ip.rfind('>')]
 			os.chdir(xml[0:xml.rfind("/")+1])
-			print(repr(ip))
 			command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+pi.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
-			print(command)
 			os.system(command)
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([pi]))
 		Button(grupos,text="agregar grupo",command=addVue).grid(row=2,column=0,columnspan=2)
@@ -107,7 +105,6 @@ class editCanva:
 				reovevoer = ' style="'+ss.get("style")+'"'
 				ih = ip.replace(reovevoer,'') 
 				command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+ih.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
-				print(command)
 				os.chdir(xml[0:xml.rfind("/")+1])
 				os.system(command)
 			else:
@@ -122,12 +119,14 @@ class editCanva:
 		parser = etree.HTMLParser()
 		tree = etree.parse(StringIO(f), parser).getroot()
 		fz = Scale(par,from_=0,to=400, orient=HORIZONTAL)
-		def upTree (TI):
-			try: 
-				tifd = xmlTree.item(xmlTree.parent(TI))["values"][0]
-				print(tifd)
-				upTree(xmlTree.parent(TI))
-			except: pass
+		def upTree ():
+			for i in xmlTree.get_children():
+				xmlTree.delete(i)
+			f = os.popen("cd "+xml[0:xml.rfind("/")+1]+"; cat "+xml[xml.rfind("/")+1:-1]).read()
+			parser = etree.HTMLParser()
+			tree = etree.parse(StringIO(f), parser).getroot()
+			hd = xmlTree.insert("", END, text="HTML", values=tuple([etree.tostring(tree[1])]), open=True)
+			tf(tree[1],xmlTree,hd)
 		def checkD ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("\\n","\n").replace("\\t","\t").replace("<br/>","<br>")
 			print(ip)
@@ -157,13 +156,13 @@ class editCanva:
 			CFD = open(tg[xml.rfind("/")+1:-2],"r").read()
 			CF = open(tg[xml.rfind("/")+1:-2],"w").write(CFD.replace(ts,tj))
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([etree.tostring(scri).decode()]))
-			upTree(xmlTree.focus())
 			formaHTML(c, xml)
 			preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
 		ttk.Separator(par,orient="horizontal").grid(row=7,column=0,sticky="we")
 		tre = Frame(par, background="black")
 		tre.grid(row=6,column=0)
+		Button(par,text="actualizar", command=upTree).grid(row=4,column=0)
 		xmlTree = ttk.Treeview(tre)
 		def preV (event):
 			if self.imap == None:
