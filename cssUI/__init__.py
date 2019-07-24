@@ -59,6 +59,28 @@ class editCanva:
 		classNameTF = Entry(grupos)
 		classNameTF.grid(row=1,column=1)
 		Label(grupos,text="nombre del nuevo grupo: ").grid(row=1,column=0)
+		def changeElement (ic,key,values):
+			ip = ic
+			fd = ""
+			if ip[0:2] == "b'":
+				ip = ip [2:-1]
+			pi = ip[0:ip.index('>') + 1]
+			if "style" in pi:
+				s = []
+				i = 0
+				for c in pi:
+					i += 1
+					if c == "\"": s.append(i)
+				print(s)
+			else:
+				estilo = "style=\""+cssWrite(values)+"\""
+				pi=pi.replace(">"," "+estilo+">")
+				fd = ic[0:ic.find('>')]+" "+estilo+ic[ic.find('>'):]
+			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([fd]))
+			os.chdir(xml[0:xml.rfind("/")+1])
+			CFD = open((xml + " ")[xml.rfind("/")+1:-2],"r").read()
+			CF = open((xml+ " ")[xml.rfind("/")+1:-2],"w").write(CFD.replace(ic,fd))
+			upTree()
 		def quiVue ():
 			self.clazz.remove(cass.get())
 			cass["values"] = self.clazz
@@ -128,33 +150,16 @@ class editCanva:
 			hd = xmlTree.insert("", END, text="HTML", values=tuple([etree.tostring(tree[1])]), open=True)
 			tf(tree[1],xmlTree,hd)
 		def checkD ():
-			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("\\n","\n").replace("\\t","\t").replace("<br/>","<br>")
-			if ip[0:2] == "b'":
-				ip = ip [2:-1]
-			scri = etree.fromstring(ip)
-			if "style" in scri.attrib:
-				ip = scri.get("style")
-			else:
-				ip = ""
-			#dire.get()
-			sass = {}
-			sass["color"] = self.textColor[1]
+			element = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("\\n","\n").replace("\\t","\t").replace("<br/>","<br>")
+			css = {}
+			css["color"] = self.textColor[1]
+			if sc.get() > 0:
+				css["font-size"] = int(sc.get())
 			if self.backColor[1] != None:
 				if len(self.backColor[1]) > 1:
-					sass["background-color"] = self.backColor[1]
-			if sc.get() > 0:
-				sass["font-size"] = int(sc.get())
-			sass["padding"] = int(pd.get())
-			ts = etree.tostring(scri).decode()
-			scri.set("style",cssWrite(sass))
-			os.chdir(xml[0:xml.rfind("/")+1])
-			tg = xml + " "
-			tj = etree.tostring(scri).decode()
-			ts.replace("<br/>","<br>")
-			tj.replace("<br/>","<br>")
-			CFD = open(tg[xml.rfind("/")+1:-2],"r").read()
-			CF = open(tg[xml.rfind("/")+1:-2],"w").write(CFD.replace(ts,tj))
-			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([etree.tostring(scri).decode()]))
+					css["background-color"] = self.backColor[1]
+			css["padding"] = int(pd.get())
+			changeElement(element,"style",css)
 			formaHTML(c, xml)
 			preV(None)
 		Button(par,text="aplicar cambios",command=checkD).grid(row=5,column=0)
