@@ -71,6 +71,12 @@ class editCanva:
 				for c in pi:
 					i += 1
 					if c == "\"": s.append(i)
+				rm = pi[pi.find("style"):pi.find('>') + 1]
+				for c in pi:
+					i += 1
+					if c == "\"": s.append(i)
+				rm = rm[0:s[2]]
+				print(rm)
 			else:
 				estilo = "style=\""+cssWrite(values)+"\""
 				pi=pi.replace(">"," "+estilo+">")
@@ -79,8 +85,6 @@ class editCanva:
 			os.chdir(xml[0:xml.rfind("/")+1])
 			CFD = open((xml + " ")[xml.rfind("/")+1:-2],"r").read()
 			CF = open((xml+ " ")[xml.rfind("/")+1:-2],"w").write(CFD.replace(ic,fd))
-			print(ic)
-			print(fd)
 			upTree()
 		def quiVue ():
 			self.clazz.remove(cass.get())
