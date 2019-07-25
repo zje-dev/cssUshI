@@ -66,20 +66,15 @@ class editCanva:
 				ip = ip [2:-1]
 			pi = ip[0:ip.index('>') + 1]
 			if "style" in pi:
-				s = []
-				i = 0
-				for c in pi:
-					i += 1
-					if c == "\"": s.append(i)
-				rm = pi[pi.find("style"):pi.find('>') + 1]
-				for c in pi:
-					i += 1
-					if c == "\"": s.append(i)
-				rm = rm[0:s[2]]
-				print(rm)
+				rm = pi[pi.find("style") - 1:pi.find('>')]
+				mr = rm.replace("style=\"","style=Q")
+				rm2 = rm[0:mr.find("\"") + 1]
+				rm3 = rm2.replace("\"","").replace(" style=","")
+				fd = ic.replace(rm3,cssWrite(values))
 			else:
 				estilo = "style=\""+cssWrite(values)+"\""
 				pi=pi.replace(">"," "+estilo+">")
+				print(pi)
 				fd = ic[0:ic.find('>')]+" "+estilo+ic[ic.find('>'):]
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([fd]))
 			os.chdir(xml[0:xml.rfind("/")+1])
