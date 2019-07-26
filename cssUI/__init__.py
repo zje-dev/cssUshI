@@ -59,22 +59,41 @@ class editCanva:
 		classNameTF = Entry(grupos)
 		classNameTF.grid(row=1,column=1)
 		Label(grupos,text="nombre del nuevo grupo: ").grid(row=1,column=0)
+		def QuitElementnt (ic,key):
+			ip = ic
+			fd = ""
+			if ip[0:2] == "b'":
+				ip = ip [2:-1]
+			pi = ip[0:ip.index('>') + 1]
+			rm = pi[pi.find(key) - 1:pi.find('>')]
+			fd = ic.replace(rm,"")
+			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([fd]))
+			os.chdir(xml[0:xml.rfind("/")+1])
+			CFD = open((xml + " ")[xml.rfind("/")+1:-2],"r").read()
+			CF = open((xml+ " ")[xml.rfind("/")+1:-2],"w").write(CFD.replace(ic,fd))
+			upTree()
 		def changeElement (ic,key,values):
 			ip = ic
 			fd = ""
 			if ip[0:2] == "b'":
 				ip = ip [2:-1]
 			pi = ip[0:ip.index('>') + 1]
-			if "style" in pi:
-				rm = pi[pi.find("style") - 1:pi.find('>')]
-				mr = rm.replace("style=\"","style=Q")
+			if key in pi:
+				rm = pi[pi.find(key) - 1:pi.find('>')]
+				mr = rm.replace(key+"=\"",key+"=Q")
 				rm2 = rm[0:mr.find("\"") + 1]
-				rm3 = rm2.replace("\"","").replace(" style=","")
-				fd = ic.replace(rm3,cssWrite(values))
+				rm3 = rm2.replace("\"","").replace(" "+key+"=","")
+				if key == "style":
+					fd = ic.replace(rm3,cssWrite(values))
+				else:
+					fd = ic.replace(rm3,values)
 			else:
-				estilo = "style=\""+cssWrite(values)+"\""
+				estilo = ""
+				if key == "style":
+					estilo = key+"=\""+cssWrite(values)+"\""
+				else:
+					estilo = key+"=\""+values+"\""
 				pi=pi.replace(">"," "+estilo+">")
-				print(pi)
 				fd = ic[0:ic.find('>')]+" "+estilo+ic[ic.find('>'):]
 			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([fd]))
 			os.chdir(xml[0:xml.rfind("/")+1])
@@ -94,26 +113,14 @@ class editCanva:
 			else:
 				messagebox.showerror("Error", "Error el grupo no tiene nombre")
 		def adGrup ():
-			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
-			PTFD = etree.fromstring(ip)
-			PTFD.set("class",cass.get())
-			pi = etree.tostring(PTFD).decode()
-			ip = ip[0:ip.rfind('>')]
-			os.chdir(xml[0:xml.rfind("/")+1])
-			command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+pi.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
-			os.system(command)
-			xmlTree.item(xmlTree.focus(), text=xmlTree.item(xmlTree.focus())["text"], values=tuple([pi]))
+			element = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("\\n","\n").replace("\\t","\t").replace("<br/>","<br>")
+			cless = cass.get()
+			changeElement(element,"class",cless)
 		Button(grupos,text="agregar grupo",command=addVue).grid(row=2,column=0,columnspan=2)
 		def sacarDelGrupo ():
-			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
+			ip = "".join(xmlTree.item(xmlTree.focus())["values"]).replace("\\n","\n").replace("\\t","\t").replace("<br/>","<br>")
 			if "class" in ip[0:ip.find(">") + 1]:
-				ss = etree.fromstring(ip)
-				ip = ip[0:ip.rfind('>')]
-				reovevoer = ' class="'+ss.get("class")+'"'
-				ih = ip.replace(reovevoer,'') 
-				command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+ih.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
-				os.chdir(xml[0:xml.rfind("/")+1])
-				os.system(command)
+				QuitElementnt(ip,"class")
 			else:
 				messagebox.showerror("Error", "Error el elemento no es de ningun grupo")
 		Button(grupos,text="quitar del grupo",activebackground="#a60000",bg="red",command=sacarDelGrupo).grid(row=5,column=0,columnspan=2)
@@ -122,13 +129,7 @@ class editCanva:
 		def quitCool ():
 			ip = "".join(xmlTree.item(xmlTree.focus())["values"])
 			if "style" in ip[0:ip.find(">") + 1]:
-				ss = etree.fromstring(ip)
-				ip = ip[0:ip.rfind('>')]
-				reovevoer = ' style="'+ss.get("style")+'"'
-				ih = ip.replace(reovevoer,'') 
-				command = "sed -i \'s|"+ip.replace('\"','\\\"')+"|"+ih.replace('\"','\\\"')+"|g\' "+(xml + " ")[xml.rfind("/")+1:-1]
-				os.chdir(xml[0:xml.rfind("/")+1])
-				os.system(command)
+				QuitElementnt(ip,"style")
 			else:
 				messagebox.showerror("Error", "Error el elemento no tiene ningun estilo")
 			formaHTML(c, xml)
