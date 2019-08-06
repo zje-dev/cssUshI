@@ -22,6 +22,14 @@ class Finput:
 			if "value" in element.attrib:
 				self.TKelement.insert(0,element.get("value"))
 		self.TKelement.grid(row=yp,column=xp,sticky=N+W)
+		if "style" in element.attrib:
+			css = cssRead(element.get("style"))
+			if "background-color" in css.keys():
+				self.TKelement["bg"] = css["background-color"]
+			else:
+				self.TKelement["bg"] = self.TKelement.master["bg"]
+			if "color" in css.keys():
+				self.TKelement.configure(fg=css["color"])
 class div:
 	DOMelement = ""
 	TKelement = None
