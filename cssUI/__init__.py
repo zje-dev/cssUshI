@@ -186,7 +186,8 @@ class editCanva:
 				rl = etree.tostring(element).decode()
 				ei = xt.insert(pr, END, text=element.tag, values=tuple([rl]), open=True)
 				for subEle in element:
-					tf(subEle,xt,ei)
+					if subEle.tag != "br":
+						tf(subEle,xt,ei)
 		tf(tree[1],xmlTree,hd)
 		self.root = par
 class inicio:

@@ -7,6 +7,21 @@ import os
 xp = 0
 yp = 0
 textTag = ["b","i","sup","sub","span","h1","h2","h3","h4","h5","h6","a"]
+contTag = ["div","header","footer","form","center"]
+class Finput:
+	TKelement = None
+	def __init__(self,elem,parent,tp):
+		element = etree.fromstring(elem)
+		global xp, yp
+		if tp == "button" or tp == "submit":
+			self.TKelement = Button(parent)
+			if "value" in element.attrib:
+				self.TKelement.configure(text=element.get("value"))
+		else:
+			self.TKelement = Entry(parent)
+			if "value" in element.attrib:
+				self.TKelement.insert(0,element.get("value"))
+		self.TKelement.grid(row=yp,column=xp,sticky=N+W)
 class div:
 	DOMelement = ""
 	TKelement = None
@@ -15,7 +30,7 @@ class div:
 		element = etree.fromstring(elem)
 		self.TKelement = Frame(parent)
 		global xp, yp
-		if iam == "div":
+		if iam == "div" or iam == "header" or iam == "footer" or iam == "form":
 			self.TKelement.grid(row=yp,column=xp,sticky=N+W)
 		elif iam == "center":
 			self.TKelement.grid(row=yp,column=xp,sticky=N)
@@ -94,6 +109,9 @@ def parOne (parent,data):
 		elif ele.tag == "br":
 			xp = 0
 			yp += 1
-		elif ele.tag == "div" or ele.tag == "center":
+		elif ele.tag in contTag:
 			div(etree.tostring(ele),parent,ele.tag)
 			yp += 1
+		elif ele.tag == "input":
+			if "type" in ele.attrib:
+				Finput(etree.tostring(ele),parent,ele.get("type"))
